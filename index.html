@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark">
+<title>MTG Deck Studio｜牌組庫</title>
+<style>
+:root{--bg:#0e1615;--panel:#1a2825;--panel2:#22362f;--ink:#eff9f2;--muted:#b5c9bc;--line:#3d6350;--accent:#b8eabf;--gold:#f1d391;--warn:#f8d59b;--danger:#f3b6b6}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.48 system-ui,-apple-system,"Noto Sans TC",sans-serif}button,input,select{font:inherit;color:inherit}button{background:#2a4538;border:1px solid #557860;border-radius:9px;padding:8px 10px;cursor:pointer}button:hover:not(:disabled){background:#355944}button:disabled{opacity:.48;cursor:not-allowed}a{color:#bfecdf;text-decoration:none}a:hover{text-decoration:underline}input,select{padding:9px;background:#23372d;border:1px solid #54715f;border-radius:9px}input[type=number]{width:110px}h1{font-size:25px;margin:0}h2{font-size:19px;margin:12px 0 9px}p{margin:7px 0}.muted,.hint{color:var(--muted)}.small{font-size:12px}.error{color:var(--danger)}.ok{color:var(--accent)}.warn{color:var(--warn)}
+header{padding:20px max(13px,calc((100% - 1350px)/2));background:linear-gradient(105deg,#224b32,#111f1a);border-bottom:1px solid var(--line)}main{max-width:1350px;margin:auto;padding:0 13px 50px}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.btnprimary{background:#557945;color:white}.btnsmall{font-size:12px;padding:5px 7px}.btnsubtle{background:transparent}.btnbad{border-color:#986b64}.toolbar{position:sticky;top:0;z-index:15;background:rgba(14,22,21,.97);padding:12px 0 10px;border-bottom:1px solid var(--line)}.toolbar>.row{margin:6px 0}.toolbar input[type=search]{min-width:170px;flex:1}.summary{margin-top:10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.sum{background:#24372d;border:1px solid #45634d;border-radius:10px;padding:9px}.sum b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.sum small{color:var(--muted)}.notice{border:1px solid #5d684b;border-radius:9px;padding:9px 12px;background:#242e22;color:#d6dfce;margin:12px 0}.sections{margin-top:14px}section{margin-bottom:31px}section h2{border-bottom:1px solid var(--line);padding-bottom:7px}.cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:11px;overflow:hidden;min-width:0}.card.owned{border-color:#b8a668}.frame{position:relative;aspect-ratio:488/680;background:radial-gradient(#304d3d,#16221d);overflow:hidden;display:grid;place-items:center}.frame img{width:100%;height:100%;object-fit:contain;z-index:1}.frame .imgnotice{position:absolute;inset:20%;display:grid;place-items:center;text-align:center;color:#afc6b8;font-size:12px;z-index:0}.tag{position:absolute;z-index:2;background:#163c2f;border-radius:6px;padding:3px 7px;font-size:11px;top:6px;left:6px}.tag.ownedtag{left:auto;right:6px;background:var(--gold);color:#1d291b;font-weight:650}.info{padding:9px}.cardtitle{min-height:36px;line-height:1.25;font-weight:650;font-size:13px;overflow-wrap:anywhere}.printmeta{font-size:11px;color:var(--muted);min-height:18px;margin-top:3px}.price{font-size:12px;color:var(--accent);min-height:37px;margin-top:5px}.price .detail{display:block;color:var(--muted);font-size:11px}.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.btnrow button{font-size:12px;padding:7px 3px}.owned-price{text-decoration:line-through;opacity:.7}.foot{font-size:12px;color:var(--muted);margin-top:20px;border-top:1px solid var(--line);padding-top:14px}.hidden{display:none!important}
+dialog{color:var(--ink);border:1px solid #70957c;border-radius:14px;background:#172820;box-shadow:0 18px 70px #000b;width:min(940px,96vw);max-height:95vh;padding:0}dialog::backdrop{background:#000c} .dialogbody{padding:16px;max-height:92vh;overflow:auto}.modalheader{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding-bottom:9px}.modalheader h2{margin:0}.modalgrid{display:grid;grid-template-columns:minmax(180px,245px) 1fr;gap:17px;margin-top:12px}.bigframe{width:100%;max-height:360px;aspect-ratio:488/680;object-fit:contain;background:#253629;border-radius:8px}.variants{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-height:390px;overflow:auto}.variant{min-width:0;text-align:left;background:#20372d;border:1px solid #577a62;border-radius:9px;padding:4px}.variant.active{outline:2px solid var(--gold);border-color:var(--gold)}.variant img{width:100%;aspect-ratio:488/680;object-fit:contain;border-radius:5px;display:block}.variant span{display:block;font-size:10px;line-height:1.35;padding:3px;overflow-wrap:anywhere}.variant .p{color:var(--accent)}.segmented{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 11px}.segmented button.active{background:#417553;border-color:#a3d8af}.lab{display:block;font-size:12px;color:var(--muted);margin:9px 0 4px}.inputwide{width:100%}.pill{font-size:11px;border:1px solid #51715c;border-radius:99px;padding:3px 7px}.errorbox{padding:8px;border:1px solid #975d5d;border-radius:7px;color:#ffc6bc;margin:8px 0}.successbox{padding:8px;border:1px solid #729971;border-radius:7px;color:#daf9d9;margin:8px 0}.fileinput{position:absolute;left:-9999px}.guide{font-size:12px;color:var(--muted);margin-top:12px}#artStatus{margin:8px 0}#artOptions{margin-bottom:10px}#editCandidate img{width:125px;max-height:175px;object-fit:contain;border-radius:7px}.candidate{display:flex;gap:12px;align-items:flex-start;margin:12px 0}.pricepanel{margin:7px 0;padding:9px;border:1px solid #516c55;border-radius:9px;background:#243c2e}.statwarning{font-size:12px;margin-top:3px;color:var(--warn)}
+@media(max-width:1100px){.cards{grid-template-columns:repeat(5,minmax(0,1fr))}}@media(max-width:780px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}.summary{grid-template-columns:repeat(2,1fr)}}@media(max-width:590px){.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cardtitle{font-size:12px;min-height:32px}.modalgrid{grid-template-columns:1fr}.modalgrid aside{max-width:250px;margin:0 auto}.variants{grid-template-columns:repeat(3,minmax(0,1fr))}.toolbar{position:static}header{padding:15px}h1{font-size:21px}.dialogbody{padding:11px}}@media print{body{background:white;color:black}header,.toolbar,.btnrow,dialog,.foot{display:none}.cards{grid-template-columns:repeat(5,minmax(0,1fr))}.card{break-inside:avoid}}
+
+/* V6.2 compact toolbar – search/filter always available, other tools in a popover */
+header{padding:10px max(13px,calc((100% - 1350px)/2))}header h1{font-size:20px;line-height:1.3}header .header-version{color:var(--accent);font-size:15px}header .header-hint{font-size:12px;font-weight:400;color:var(--muted)}
+.toolbar{padding:7px 0 5px;background:rgba(14,22,21,.985);box-shadow:0 5px 14px #0003}
+.toolmain{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}
+.toolmain input[type=search]{min-width:180px;width:auto;flex:1 1 380px;max-width:none}
+.toolmain input[type=search],.toolmain select,.toolmain>button,.toolsmenu>summary{height:35px;padding:5px 11px;border-radius:8px;font-size:13px}
+.toolmain select{min-width:99px;max-width:155px;flex:0 0 auto}
+.toolmain>button{flex:0 0 auto}
+.toolsmenu{position:relative;flex:0 0 auto}
+.toolsmenu>summary{display:flex;gap:6px;align-items:center;justify-content:center;background:#2a4538;border:1px solid #557860;cursor:pointer;list-style:none;white-space:nowrap;user-select:none}
+.toolsmenu>summary::-webkit-details-marker{display:none}.toolsmenu>summary:hover{background:#355944}.toolsmenu[open]>summary{background:#436c51;border-color:#a7d0b0}
+.toolsmenu .chevron{font-size:13px;color:var(--muted)}
+.advanced-tools{position:absolute;right:0;top:calc(100% + 9px);width:min(680px,calc(100vw - 30px));padding:12px;border:1px solid #6a8d73;border-radius:12px;box-shadow:0 17px 38px #0009;background:#1a2b23;z-index:100;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.advanced-tools button{padding:7px 10px;font-size:12px;white-space:nowrap}
+.fxlabel{display:flex;gap:8px;align-items:center;width:100%;padding-bottom:5px;border-bottom:1px solid #45634d}
+.fxlabel input[type=number]{width:85px;height:32px;padding:5px 8px}
+.toolnote{width:100%;margin:2px 0 0;font-size:11px;color:var(--muted)}
+.summary{margin-top:4px;display:flex;grid-template-columns:none;gap:0;align-items:center;white-space:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;max-height:34px;min-height:24px}
+.summary::-webkit-scrollbar{display:none}
+.summary .sum{display:flex;gap:6px;align-items:baseline;padding:0 13px 0 0;margin-right:13px;border-right:1px solid #385444;background:none;border-radius:0;white-space:nowrap;min-width:max-content}
+.summary .sum .statlabel{font-size:11px;color:var(--muted)}
+.summary .sum b{display:inline;font-size:13px;line-height:19px;font-weight:650;font-variant-numeric:tabular-nums}
+.summary .missingstat{font-size:11px;color:var(--warn);white-space:nowrap;flex:0 0 auto}
+.compact-visible{position:static;font-size:11px;display:inline;white-space:nowrap;margin-left:2px}
+.toolbar.scrolled .summary{display:none}.toolbar.scrolled{padding-bottom:7px}
+.notice{font-size:11px;line-height:1.3;margin:5px 0 7px;padding:5px 9px}
+.sections{margin-top:4px}
+@media (min-width:1000px){.cards{gap:10px}}
+@media(max-width:800px){.toolmain{flex-wrap:wrap}.toolmain input[type=search]{flex-basis:100%;height:34px}.toolmain select{flex:1 1 75px;max-width:none}.summary{margin-top:6px}.toolsmenu{margin-left:auto}.compact-visible{display:none}}
+@media(max-width:590px){.toolbar{position:sticky;top:0;padding:6px 0}.toolmain{gap:5px}.toolmain input[type=search],.toolmain select,.toolmain>button,.toolsmenu>summary{height:33px;padding:5px 8px;font-size:12px}.toolmain select{min-width:0}.summary .sum{padding-right:8px;margin-right:8px}.summary .sum .statlabel{font-size:10px}.summary .sum b{font-size:12px}.header-hint{display:none}.advanced-tools{right:0;width:min(390px,calc(100vw - 25px));gap:6px}.advanced-tools button{flex:1 1 auto}.toolbar.scrolled .summary{display:none}}
+@media print{.toolbar,.advanced-tools{display:none!important}}
+
+/* Universal workspace additions */
+.brandline{display:flex;gap:16px;align-items:center;justify-content:space-between}.brandtag{font-size:10px;letter-spacing:.15em;color:#aed4b6;font-weight:700}.brandline h1{font-size:20px}.brandline .pill{color:#e8efd9}
+.starter{text-align:center;max-width:780px;margin:45px auto 100px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(155deg,#253b2e,#14211c);padding:35px 18px}.starter h2{font-size:23px}.starter p{color:var(--muted)}.starter-icon{font-size:35px;color:var(--gold)}
+#importQuick{white-space:nowrap}.importresult{border:1px solid var(--line);border-radius:8px;padding:10px;background:#22352b;margin-top:10px;white-space:pre-wrap;line-height:1.55}#jsonText{background:#12231b;width:100%;resize:vertical;min-height:225px;padding:12px;border-radius:9px;border:1px solid #56745e;color:#e7f7ed;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:12px}.formgrid label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:5px}.formgrid input,.formgrid select{width:100%}.formgrid input[type=number]{width:100%}
+#editQty{width:72px}.toolmain #importQuick{flex:0 0 auto}button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #e0ec9e;outline-offset:2px}
+@media(max-width:590px){.formgrid{grid-template-columns:1fr}.toolmain #importQuick{order:1}.starter{margin-top:20px;padding:22px 14px}.starter h2{font-size:19px}}
+
+/* Card-level purchasing controls: owned state and seller price are editable without a dialog. */
+.quick-owned{display:flex;gap:6px;align-items:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--ink);line-height:1.3;padding:5px 0 4px;user-select:none}
+.quick-owned input{width:16px;height:16px;accent-color:#9ce0ac;cursor:pointer;flex:none;margin:0}
+.quick-owned .ownedhint{font-size:10px;color:var(--muted);font-weight:400;margin-left:auto}
+.compare{border-top:1px solid #395746;margin-top:5px;padding-top:6px;font-variant-numeric:tabular-nums;font-size:11px;line-height:1.45;min-height:40px}
+.compare .reference{color:#c0d9c9}
+.compare .mutednote{color:var(--muted)}
+.compare .difference{display:block;font-weight:700;margin-top:2px}
+.compare .difference.over{color:#ffb2a7}.compare .difference.under{color:#a9e7bd}.compare .difference.equal{color:var(--muted)}
+.quick-seller{display:flex;align-items:center;gap:5px;margin-top:6px}
+.quick-seller label{font-size:11px;color:var(--muted);white-space:nowrap;flex:none}
+.quick-seller .nt-sign{font-size:11px;color:var(--accent);white-space:nowrap}
+.quick-seller input{min-width:0;width:100%;height:31px;font-size:13px;padding:5px 7px;border:1px solid #59816a;border-radius:6px;background:#101f19;color:#f2faf4;font-variant-numeric:tabular-nums}
+.quick-seller input::placeholder{color:#83a092}.quick-seller input:focus{border-color:#b7e9bc}
+.quick-seller .clear-price{padding:3px 6px;font-size:14px;background:transparent;border:0;color:#a9bdae;min-width:22px;cursor:pointer}
+.quick-seller .clear-price:hover{color:var(--ink)}
+.price{min-height:0;margin-top:3px}.price .detail{min-height:0}
+.card .info{display:flex;flex-direction:column;min-height:212px}
+.card .btnrow{margin-top:auto;padding-top:8px}
+@media(max-width:590px){.quick-seller{flex-wrap:nowrap}.quick-seller label{font-size:10px}.quick-owned .ownedhint{display:none}.card .info{min-height:221px}}
+@media print{.quick-owned,.quick-seller{display:none!important}.compare{border-top:none}}
+
+.storage-indicator{display:inline-block;border:1px solid #6a856e;border-radius:9px;padding:5px 8px;color:#bfe4c6;background:#233729;font-size:11px;white-space:nowrap;max-width:170px;overflow:hidden;text-overflow:ellipsis}
+.storage-indicator.busy{color:#ead5a5;border-color:#99804e;background:#372e1c}.storage-indicator.bad{color:#ffd0c9;border-color:#a85d56;background:#422725}.storage-indicator.good{color:#cef8d6;border-color:#457e54}
+@media(max-width:690px){.storage-indicator{order:5;max-width:100%;font-size:10px}}
+.portable-reminder{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1px solid #7d8956;border-radius:10px;background:#29351f;color:#f1f1db;padding:10px 12px;margin-top:11px;font-size:12px;line-height:1.5}.portable-reminder span{flex:1;min-width:220px}.portable-reminder button{white-space:nowrap}.import-save-warning{border:1px solid #af8852;border-radius:9px;background:#392f1d;color:#ffe9bc;padding:11px;margin:11px 0;font-size:13px;line-height:1.55}@media(max-width:570px){.portable-reminder button{width:100%}}
+
+/* V7 牌組庫 */
+.libbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.libbar select{max-width:260px;padding:6px 8px;font-size:13px}
+.libbar button{padding:6px 10px;font-size:13px}
+.liblist{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.librow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid #3d6350;border-radius:10px;padding:9px 11px;background:#1d2f28}
+.librow.current{border-color:#a8d98f;background:#24382c}
+.librow .libinfo{flex:1;min-width:180px}
+.librow .libtitle{font-weight:700}
+.librow .libactions{display:flex;gap:6px;flex-wrap:wrap}
+.libempty{padding:18px;text-align:center;color:var(--muted);border:1px dashed #3d6350;border-radius:10px}
+.backupwarn{color:var(--warn)}
+@media(max-width:590px){.brandline{flex-wrap:wrap}.libbar{justify-content:flex-start}.libbar select{max-width:100%;flex:1}}
+
+/* 點圖放大 */
+.frame img{cursor:zoom-in}
+dialog.zoommodal{width:auto;max-width:98vw;max-height:98vh;background:transparent;border:none;box-shadow:none;overflow:visible}
+dialog.zoommodal::backdrop{background:#000d}
+.zoombody{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 52px}
+.zoomimgs{display:flex;gap:12px;justify-content:center;align-items:center}
+.zoomimgs img{display:block;max-height:min(80vh,936px);max-width:min(88vw,670px);width:auto;height:auto;border-radius:4.2%/3%;box-shadow:0 10px 50px #000c;background:#16221d;cursor:zoom-out}
+.zoomimgs.two img{max-width:min(44vw,600px)}
+.zoomimgs img{animation:zoomfade .18s ease-out}
+@keyframes zoomfade{from{opacity:0}to{opacity:1}}
+.zoomph{height:min(80vh,936px);aspect-ratio:672/936;max-width:min(88vw,670px);border-radius:4.2%/3%;background:#16221d;border:1px solid #2f4a3c;display:grid;place-items:center;color:var(--muted)}
+.zoomimgs.two .zoomph{max-width:min(44vw,600px)}
+.zoomspin{width:34px;height:34px;border-radius:50%;border:3px solid #3d6350;border-top-color:#b8eabf;animation:zoomspin .8s linear infinite;opacity:0;animation-delay:.25s;animation-fill-mode:forwards}
+@keyframes zoomspin{from{transform:rotate(0);opacity:1}to{transform:rotate(360deg);opacity:1}}
+.zoomcap{text-align:center;color:#eef6ee;font-size:14px;line-height:1.5;max-width:90vw}
+.zoomcap .small{display:block}
+.zoomnav,.zoomclose{position:absolute;background:#1d2f28cc;border:1px solid #557860;border-radius:99px;color:#eef6ee;line-height:1}
+.zoomnav{top:calc(50% - 40px);width:40px;height:40px;font-size:24px;padding:0}
+.zoomnav.prev{left:4px}.zoomnav.next{right:4px}
+.zoomclose{top:4px;right:4px;width:36px;height:36px;padding:0;font-size:16px;z-index:2}
+@media(max-width:590px){.zoombody{padding:44px 4px 8px}.zoomimgs{flex-direction:column}.zoomimgs img,.zoomimgs.two img{max-width:92vw;max-height:72vh}.zoomimgs.two img{max-height:38vh}.zoomph{height:72vh;max-width:92vw}.zoomimgs.two .zoomph{height:38vh;max-width:92vw}.zoomnav{top:auto;bottom:-2px}.zoomnav.prev{left:8px}.zoomnav.next{right:8px}.zoomclose{top:0}}
+</style></head><body>
+<header><div class="brandline"><div><span class="brandtag">MTG DECK STUDIO</span><h1 id="deckTitle">尚未載入牌組</h1></div><div class="libbar"><span id="deckFormatBadge" class="pill">匯入 JSON 開始</span><select id="deckSwitch" aria-label="切換牌組" title="切換牌組"></select><button id="openLibrary" type="button" title="切換、新增、複製、刪除、備份牌組">📚 牌組庫</button></div></div></header>
+<main>
+<div class="toolbar" id="topToolbar">
+  <div class="toolmain">
+    <input type="search" id="search" placeholder="🔎 搜尋牌名…" aria-label="搜尋牌名">
+    <select id="type" aria-label="依牌型篩選"><option value="">全部牌型</option></select>
+    <select id="ownedFilter" aria-label="依持有狀態篩選"><option value="">全部</option><option value="yes">已有</option><option value="no">待購</option></select>
+    <button id="clearFilter" type="button" title="清除牌名、牌型和持有狀態篩選">清除</button><span id="storageIndicator" class="storage-indicator" title="資料儲存狀態">檢查儲存…</span><button id="importQuick" type="button" class="btnprimary" title="匯入任意符合格式的牌組 JSON">匯入 JSON</button>
+    <details class="toolsmenu" id="toolsDetails"><summary>⚙ 工具 <span class="chevron">⌄</span></summary>
+      <div class="advanced-tools">
+        <label class="small fxlabel">估算匯率：US$1 = NT$ <input id="fx" type="number" min="1" max="100" step="0.01" value="32.5"></label>
+        <button id="reloadPrices" title="再次從 Scryfall 更新目前印刷版本的參考價格">↻ 更新卡價／圖片</button>
+        <button id="openLibraryTool">📚 牌組庫（切換／新增／刪除）</button><button id="resetDeck">＋ 新增空白牌組</button>
+        <button id="importBtn">匯入 JSON（新增牌組）</button><button id="addCard">＋ 新增牌張</button><button id="deckSettings">牌組設定</button>
+        <button id="exportJson">下載此牌組 JSON</button><button id="exportAll" class="btnprimary">⬇ 匯出全部備份</button><button id="exportTxt">匯出 Moxfield TXT</button>
+        <button id="templateBtn">下載 JSON 範本</button><button id="exampleBtn">載入示範牌組</button>
+        <input class="fileinput" id="importFile" type="file" accept=".json,application/json">
+        <p class="toolnote">所有牌組都存在這個瀏覽器的牌組庫，跟 HTML 檔名無關，改名、搬位置都讀得到。換電腦、換瀏覽器或清除瀏覽資料前，請先「匯出全部備份」。</p>
+      </div>
+    </details>
+    <span class="compact-visible small muted" id="visibleCount"></span>
+  </div>
+  <div class="summary" id="summary" aria-live="polite"></div>
+</div>
+<div class="notice" id="notice">讀取牌組庫中…</div><div id="starter" class="starter"><div class="starter-icon">✦</div><h2>一份 JSON，打開自己的 MTG 牌組</h2><p>匯入 Commander、60 張構築或其他自訂牌表；一樣能切換異圖、閃卡、記錄台灣店價和替換牌張。</p><div class="row" style="justify-content:center"><button class="btnprimary" id="startImport">匯入牌組 JSON</button><button id="startExample">試用示範牌組</button><button id="startTemplate">下載 JSON 範本</button></div><p class="small muted">不需要登入或架設伺服器。每次匯入都會新增一副牌組到「📚 牌組庫」，可隨時切換；修改會自動儲存在這個瀏覽器，HTML 改名也不影響。</p></div>
+<div id="deck" class="sections"></div>
+<p class="foot">本工具可離線開啟與編輯，但下載卡圖、查詢異圖／市場參考價需連上網路。資料來源：<a href="https://scryfall.com" target="_blank" rel="noopener">Scryfall</a>。市場價格依版本、語言、一般／閃卡／刻蝕版本不同而異，且可能缺價。台幣為<strong>手動指定匯率估算</strong>，不是即時匯率。你可直接在每張卡片輸入台灣賣家實際報價，並即時查看相對於該印刷版本國外參考價的溢價或折價。所有牌組<strong>自動儲存在這個瀏覽器的牌組庫</strong>，與 HTML 檔名無關；建議使用 Chrome 或 Edge。換電腦、換瀏覽器或清除瀏覽資料會讀不到，請定期「匯出全部備份」。支援舊版 Indoraptor 編輯器 JSON 備份。圖片需網路。</p>
+</main>
+<dialog id="artModal"><div class="dialogbody"><div class="modalheader"><div><h2 id="artTitle">選擇異圖</h2><div class="muted small" id="artSubtitle"></div></div><button id="closeArt">✕ 關閉</button></div>
+<div class="modalgrid"><aside><img class="bigframe" id="artPreview" alt="選擇的版本"><div class="pricepanel"><div id="artDetails" class="small muted"></div><div id="artPrice" style="margin-top:5px"></div></div><div class="lab">這個印刷版本的處理方式</div><div id="finishButtons" class="segmented"></div><div class="row"><button id="artPrev">◀ 上一款</button><button id="artNext">下一款 ▶</button></div><p class="small"><a id="artScry" target="_blank" rel="noopener">在 Scryfall 查看此版本 ↗</a></p></aside>
+<div><div class="segmented"><button id="modeArt">只看不同插畫</button><button id="modeAll">所有印刷版本</button></div><p class="small muted" id="artStatus"></p><div id="artOptions" class="variants"></div><button id="moreArt" class="hidden">載入更多印刷版本</button><div class="errorbox hidden" id="artError"></div></div></div></div></dialog>
+<dialog id="editModal"><div class="dialogbody"><div class="modalheader"><h2 id="editModalTitle">編輯／替換牌張</h2><button id="closeEdit">✕ 關閉</button></div><p class="muted" id="editCurrent"></p>
+<label class="lab" for="editName">替換成（輸入英文牌名後搜尋）</label><div class="row"><input id="editName" class="inputwide" list="suggestedCards" autocomplete="off" placeholder="例如 Court of Garenbrig"><datalist id="suggestedCards"></datalist><button id="findCard">查詢牌張</button></div><div id="editCandidate" class="candidate hidden"><img id="candidateImage" alt="候選牌卡圖"><div><b id="candidateName"></b><div class="small muted" id="candidateDetails"></div><div class="small" id="candidatePrice"></div></div></div>
+<div id="editWarning" class="errorbox hidden"></div>
+<div class="row"><label class="small hidden" id="addCommanderLabel"><input type="checkbox" id="addCommander"> 設為指揮官</label></div>
+<p class="guide">在卡片上可直接勾選「已持有」、輸入台灣店價並查看國外價差；這個視窗主要用來搜尋替換牌張或修改數量。替換一疊基本地時，只會替換其中 1 張。</p>
+<div class="row" style="margin-top:14px"><label class="small" id="editQtyGroup">數量 <input id="editQty" type="number" value="1" min="1" max="250" step="1"></label><button id="saveMeta">儲存數量</button><button id="confirmReplace" class="btnprimary" disabled>確認替換牌張</button><button id="deleteCard" class="btnbad">移除這張</button></div><div id="editMsg" class="small" style="margin-top:9px"></div></div></dialog>
+
+<dialog id="importModal"><div class="dialogbody"><div class="modalheader"><h2>匯入牌組 JSON</h2><button id="closeImport">✕ 關閉</button></div>
+<p class="small muted">請選擇 .json 檔，或貼入 JSON。匯入前會驗證格式，成功後會<strong>新增一副牌組</strong>到牌組庫，不會影響其他牌組。也可以匯入「匯出全部備份」產生的備份檔，一次還原所有牌組。</p>
+<div class="row"><button id="chooseJson">選擇 JSON 檔案</button><button id="fillTemplate">貼入簡易範本</button><button id="validateJson">檢查格式</button></div>
+<label class="lab" for="jsonText">JSON 內容</label><textarea id="jsonText" spellcheck="false" placeholder='{"title":"我的牌組","format":"Commander","deck":[{"name":"Sol Ring","qty":1,"category":"神器"}]}'></textarea>
+<div id="importResult" class="importresult small" aria-live="polite">尚未檢查。</div>
+<div class="row" style="margin-top:12px"><button id="importConfirm" class="btnprimary" disabled>確認匯入牌組</button><span class="small muted">支援舊版 V6.1 / V6.2 的 JSON 備份</span></div>
+<div class="guide">欄位：<code>title</code> 牌組名稱；<code>format</code> Commander / Standard / Modern / Custom；<code>deck</code> 陣列。每張牌最少填 <code>name</code>、<code>qty</code>、<code>category</code>；分類可使用「指揮官／生物／神器／結界／瞬間／巫術／地牌／鵬洛客」或英文類別。<code>owned</code>、<code>manualNT</code>、<code>budgetNT</code>、<code>commanderColors</code> 都是選填。可下載完整範本。</div>
+</div></dialog>
+<dialog id="settingsModal"><div class="dialogbody"><div class="modalheader"><h2>牌組設定</h2><button id="closeSettings">✕ 關閉</button></div>
+<div class="formgrid"><label>牌組名稱<input id="settingTitle" class="inputwide" maxlength="120"></label>
+<label>牌組格式<select id="settingFormat" class="inputwide"><option>Commander</option><option>Standard</option><option>Modern</option><option>Pioneer</option><option>Legacy</option><option>Vintage</option><option>Custom</option></select></label>
+<label>目標張數（可不填）<input id="settingTarget" type="number" min="1" max="500" class="inputwide"></label>
+<label>待購預算 NT$（可不填）<input id="settingBudget" type="number" min="0" step="1" class="inputwide"></label>
+<label>Commander 色組（用逗號分隔，可空白）<input id="settingColors" class="inputwide" placeholder="例如 B, R, G"></label></div>
+<p class="guide">Commander 預設目標 100 張；構築格式預設至少 60 張。這裡只提示張數，不會攔阻自訂牌組。色組留空時不套用換牌的色組檢查；此工具不取代官方賽制合法性查詢。</p>
+<div class="row"><button id="saveSettings" class="btnprimary">儲存設定</button></div>
+</div></dialog>
+<dialog id="libraryModal" style="width:min(720px,96vw)"><div class="dialogbody"><div class="modalheader"><h2>📚 牌組庫</h2><button id="closeLibrary">✕ 關閉</button></div>
+<div class="row" style="margin-top:10px"><button id="libNew" class="btnprimary">＋ 新增空白牌組</button><button id="libImport">匯入 JSON／備份</button><button id="libExportAll">⬇ 匯出全部備份</button></div>
+<p id="libBackupInfo" class="small muted" style="margin:10px 0 0"></p>
+<div id="libList" class="liblist"></div>
+<p class="guide">所有牌組都存在這個瀏覽器裡，跟 HTML 的檔名無關：這份 HTML 改名、搬位置都讀得到。換電腦、換瀏覽器或清除瀏覽資料之前，請先「匯出全部備份」，之後在新環境用「匯入 JSON／備份」還原。</p>
+</div></dialog>
+<dialog id="zoomModal" class="zoommodal" aria-label="放大卡圖"><div class="zoombody" id="zoomBody">
+<button id="zoomClose" class="zoomclose" type="button" aria-label="關閉">✕</button>
+<button id="zoomPrev" class="zoomnav prev" type="button" aria-label="上一張">‹</button>
+<div id="zoomImgs" class="zoomimgs"></div>
+<button id="zoomNext" class="zoomnav next" type="button" aria-label="下一張">›</button>
+<div class="zoomcap"><b id="zoomName"></b><span id="zoomMeta" class="small muted"></span></div>
+</div></dialog>
+<script id="embedded-state" type="application/json">{}</script>
+<script id="sample-data" type="application/json">[{"id":"c1_0","name":"Indoraptor, the Perfect Hybrid","qty":1,"owned":true,"category":"指揮官","manualNT":null},{"id":"c2_0","name":"Chandra, Acolyte of Flame","qty":1,"owned":false,"category":"鵬洛客","manualNT":null},{"id":"c2_1","name":"Chandra, Torch of Defiance","qty":1,"owned":false,"category":"鵬洛客","manualNT":null},{"id":"c2_2","name":"Domri, Anarch of Bolas","qty":1,"owned":false,"category":"鵬洛客","manualNT":null},{"id":"c2_3","name":"Minsc & Boo, Timeless Heroes","qty":1,"owned":false,"category":"鵬洛客","manualNT":null},{"id":"c2_4","name":"Nissa, Voice of Zendikar","qty":1,"owned":false,"category":"鵬洛客","manualNT":null},{"id":"c2_5","name":"Vraska, Golgari Queen","qty":1,"owned":false,"category":"鵬洛客","manualNT":null},{"id":"c3_0","name":"Brash Taunter","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_1","name":"Cankerbloom","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_2","name":"Elvish Mystic","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_3","name":"Evolution Sage","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_4","name":"Evolution Witness","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_5","name":"Forgotten Ancient","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_6","name":"Generous Patron","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_7","name":"Goblin Anarchomancer","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_8","name":"Halana and Alena, Partners","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_9","name":"Jenova, Ancient Calamity","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_10","name":"Kessig Flamebreather","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_11","name":"Llanowar Elves","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_12","name":"Managorger Hydra","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_v62_mazirek","name":"Mazirek, Kraul Death Priest","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_13","name":"Morbid Opportunist","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_14","name":"Nine-Lives Familiar","qty":1,"owned":true,"category":"生物","manualNT":null},{"id":"c3_15","name":"Pir, Imaginative Rascal","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_16","name":"Sakura-Tribe Elder","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_17","name":"Spear Spewer","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_18","name":"Tangled Florahedron // Tangled Vale","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_19","name":"Taurean Mauler","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_20","name":"Thermo-Alchemist","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_21","name":"Winding Constrictor","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c3_22","name":"Xantcha, Sleeper Agent","qty":1,"owned":false,"category":"生物","manualNT":null},{"id":"c4_0","name":"Arcane Signet","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c4_1","name":"Chainsaw","qty":1,"owned":true,"category":"神器","manualNT":null},{"id":"c4_2","name":"Golgari Signet","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c4_3","name":"Skullclamp","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c4_4","name":"Sol Ring","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c4_5","name":"Sun Droplet","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c4_6","name":"Swiftfoot Boots","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c4_7","name":"Talisman of Impulse","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c4_8","name":"Talisman of Indulgence","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c4_9","name":"The Earth Crystal","qty":1,"owned":true,"category":"神器","manualNT":null},{"id":"c4_10","name":"The Millennium Calendar","qty":1,"owned":false,"category":"神器","manualNT":null},{"id":"c5_0","name":"All Will Be One","qty":1,"owned":true,"category":"結界","manualNT":null},{"id":"c5_1","name":"Deathreap Ritual","qty":1,"owned":false,"category":"結界","manualNT":null},{"id":"c5_2","name":"Evolutionary Escalation","qty":1,"owned":false,"category":"結界","manualNT":null},{"id":"c5_3","name":"Goblin Bombardment","qty":1,"owned":false,"category":"結界","manualNT":null},{"id":"c5_5","name":"Rite of the Raging Storm","qty":1,"owned":false,"category":"結界","manualNT":null},{"id":"c6_0","name":"Abrade","qty":1,"owned":false,"category":"瞬間","manualNT":null},{"id":"c6_1","name":"Beast Within","qty":1,"owned":false,"category":"瞬間","manualNT":null},{"id":"c6_2","name":"Deadly Dispute","qty":1,"owned":false,"category":"瞬間","manualNT":null},{"id":"c6_3","name":"Gaea's Gift","qty":1,"owned":false,"category":"瞬間","manualNT":null},{"id":"c6_4","name":"Inspiring Call","qty":1,"owned":false,"category":"瞬間","manualNT":null},{"id":"c6_5","name":"Savage Summoning","qty":1,"owned":false,"category":"瞬間","manualNT":null},{"id":"c6_6","name":"Tamiyo's Safekeeping","qty":1,"owned":false,"category":"瞬間","manualNT":null},{"id":"c6_7","name":"Tyvar's Stand","qty":1,"owned":false,"category":"瞬間","manualNT":null},{"id":"c7_0","name":"Atarka's Command","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_1","name":"Blasphemous Act","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_2","name":"Boltwave","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_3","name":"End the Festivities","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_4","name":"Farseek","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_5","name":"Fiery Confluence","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_6","name":"Harmonize","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_7","name":"Nature's Lore","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_8","name":"Night's Whisper","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c7_9","name":"Rampant Growth","qty":1,"owned":false,"category":"巫術","manualNT":null},{"id":"c8_0","name":"Ash Barrens","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_1","name":"Cinder Glade","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_2","name":"Command Tower","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_3","name":"Dragonskull Summit","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_4","name":"Evolving Wilds","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_5","name":"Exotic Orchard","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_6","name":"Foreboding Ruins","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_7","name":"Forest","qty":5,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_8","name":"Game Trail","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_9","name":"Karn's Bastion","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_10","name":"Karplusan Forest","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_11","name":"Llanowar Wastes","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_12","name":"Mountain","qty":5,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_13","name":"Path of Ancestry","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_14","name":"Riveteers Overlook","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_15","name":"Rootbound Crag","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_16","name":"Savage Lands","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_17","name":"Smoldering Marsh","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_18","name":"Sulfurous Springs","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_19","name":"Swamp","qty":4,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_20","name":"Temple of Abandon","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_21","name":"Temple of Malice","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_22","name":"Twisted Landscape","qty":1,"owned":false,"category":"地牌","manualNT":null},{"id":"c8_23","name":"Woodland Cemetery","qty":1,"owned":false,"category":"地牌","manualNT":null}]</script>
+<script>
+(()=>{'use strict';
+const el=id=>document.getElementById(id);const API='https://api.scryfall.com';const LEGACY_KEY='mtg_deck_studio_universal_v1';const STORAGE_PREFIX='mtg_studio_document_v2_';const ACTIVE_KEY='mtg_studio_active_document_v2';const DRAFT_KEY='mtg_studio_unnamed_editor_draft_v4';const categories=['指揮官','鵬洛客','生物','神器','結界','瞬間','巫術','地牌'];const sampleDeck=JSON.parse(el('sample-data').textContent);
+const clone=obj=>JSON.parse(JSON.stringify(obj));let documentId=null;const newDocumentId=()=>('deck_'+(typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'_'+Math.random().toString(36).slice(2)));const cleanDocumentId=v=>typeof v==='string'&&/^[A-Za-z0-9_-]{8,120}$/.test(v)?v:null;let deck=[],fx=32.5,epoch=0,meta={title:'未命名牌組',format:'Commander',targetCount:100,budgetNT:null,commanderColors:[]};
+const formatDefaultTarget=f=>f==='Commander'?100:(['Standard','Modern','Pioneer','Legacy','Vintage'].includes(f)?60:null);
+const categoryAliases={Commander:'指揮官',Planeswalker:'鵬洛客',Planeswalkers:'鵬洛客',Creature:'生物',Creatures:'生物',Artifact:'神器',Artifacts:'神器',Enchantment:'結界',Enchantments:'結界',Instant:'瞬間',Instants:'瞬間',Sorcery:'巫術',Sorceries:'巫術',Land:'地牌',Lands:'地牌'};
+function parseDeckJSON(obj){
+ if(!obj||typeof obj!=='object'||Array.isArray(obj))throw Error('根目錄必須是 JSON 物件 {title, format, deck: [...]}');
+ const raw=obj.deck||obj.cards;
+ if(!Array.isArray(raw))throw Error('缺少 deck 陣列，請確認 JSON 含有 "deck": [...]');
+ if(raw.length>1000)throw Error('牌張種類最多支援 1000 種');
+ const norm=raw.map((c,i)=>{
+  if(!c||typeof c!=='object'||Array.isArray(c))throw Error(`第 ${i+1} 筆必須是牌張物件`);
+  const name=typeof c.name==='string'?c.name.trim():'';
+  const qty=Number(c.qty??c.quantity??1),cat=categoryAliases[c.category]||c.category;
+  if(!name||name.length>160)throw Error(`第 ${i+1} 筆缺少合法的 name（英文牌名）`);
+  if(!Number.isSafeInteger(qty)||qty<1||qty>250)throw Error(`${name} 的 qty 必須是 1～250 的整數`);
+  if(!categories.includes(cat))throw Error(`${name} 的 category 無效：${String(c.category)}。請使用八種中文牌型或對應英文牌型`);
+  const manual=c.manualNT===undefined||c.manualNT===null||c.manualNT===''?null:Number(c.manualNT);
+  if(manual!==null&&(!Number.isFinite(manual)||manual<0||manual>100000000))throw Error(`${name} 的 manualNT 必須是非負數或 null`);
+  const finish=['foil','nonfoil','etched'].includes(c.finish)?c.finish:'nonfoil';
+  const safePrint=c.print&&typeof c.print==='object'?cleanPrint(c.print):null;
+  return {id:'card_'+i,name,qty,owned:c.owned===true,category:cat,manualNT:manual,finish,print:safePrint};
+ });
+ const ids=new Set();for(const c of norm){while(ids.has(c.id))c.id+='x';ids.add(c.id)}
+ const title=typeof obj.title==='string'&&obj.title.trim()?obj.title.trim().slice(0,120):((obj.app==='IndoraptorCardGallery')?'Indoraptor（舊備份）':'未命名牌組');
+ const format=typeof obj.format==='string'&&obj.format.trim()?obj.format.trim().slice(0,80):'Commander';
+ let targetCount=obj.targetCount??obj.target??formatDefaultTarget(format);
+ if(targetCount!==null&&targetCount!==undefined&&targetCount!==''){
+  targetCount=Number(targetCount);if(!Number.isInteger(targetCount)||targetCount<1||targetCount>500)throw Error('targetCount 必須是 1～500 的整數，或 null');
+ }else targetCount=null;
+ let budgetNT=obj.budgetNT===undefined?(obj.app==='IndoraptorCardGallery'?5000:null):obj.budgetNT;
+ if(budgetNT!==null&&budgetNT!==''){budgetNT=Number(budgetNT);if(!Number.isFinite(budgetNT)||budgetNT<0)throw Error('budgetNT 必須是非負數或 null')}else budgetNT=null;
+ let colors=obj.commanderColors??obj.colors??[];
+ if(typeof colors==='string')colors=colors.toUpperCase().replace(/[^WUBRG]/g,'').split('');
+ if(!Array.isArray(colors)||colors.some(x=>typeof x!=='string'||!['W','U','B','R','G'].includes(x.toUpperCase())))throw Error('commanderColors 請填顏色陣列，例如 ["B","R","G"]');
+ colors=[...new Set(colors.map(x=>x.toUpperCase()))];
+ let rate=Number(obj.fx);if(!Number.isFinite(rate)||rate<=0||rate>=100)rate=32.5;
+ return {deck:norm,fx:rate,documentId:cleanDocumentId(obj.documentId??obj.meta?.documentId),meta:{title,format,targetCount,budgetNT,commanderColors:colors}};
+}
+async function commitImport(parsed,{overwriteId=null,showMessage=true}={}){
+ // 目前是空白牌組時直接沿用它，避免留下一堆空牌組
+ const id=overwriteId||(documentId&&!deck.length&&library.has(documentId)?documentId:newDocumentId());
+ showDeck(parsed,id);
+ const saved=await save();
+ if(showMessage)notify(saved?`已${overwriteId?'更新':'新增'}「${meta.title}」（${stats().qty} 張）到牌組庫。可從右上角切換其他牌組。`:`已匯入「${meta.title}」，但無法存入瀏覽器！請立刻下載 JSON 備份。`,!saved);
+ if(deck.length){refreshedThisSession.add(id);refreshPrices()}
+}
+const byId=()=>new Map(deck.map(c=>[c.id,c]));const esc=x=>String(x??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const faceName=n=>String(n).split(' // ')[0];const scryLink=n=>'https://scryfall.com/search?q='+encodeURIComponent('!"'+faceName(n)+'"');
+const imgOf=(p,size='small')=>p?.image_uris?.[size]||p?.card_faces?.find(f=>f.image_uris)?.image_uris?.[size]||'';
+const imgFallback=n=>API+'/cards/named?exact='+encodeURIComponent(faceName(n))+'&format=image&version=small';
+const priceKey=f=>({nonfoil:'usd',foil:'usd_foil',etched:'usd_etched'}[f]||'usd');
+const finishLabel=f=>({nonfoil:'一般',foil:'閃卡',etched:'刻蝕閃'}[f]||'一般');
+const finishList=p=>{let a=Array.isArray(p?.finishes)?p.finishes:[];if(!a.length){if(p?.nonfoil||p?.prices?.usd)a.push('nonfoil');if(p?.foil||p?.prices?.usd_foil)a.push('foil');if(p?.prices?.usd_etched)a.push('etched')}return a.length?a:['nonfoil']};
+const availablePrice=(p,f)=>{let v=Number(p?.prices?.[priceKey(f)]);return Number.isFinite(v)&&v>0?v:null};
+const chosenFinish=c=>finishList(c.print).includes(c.finish)?c.finish:finishList(c.print)[0];
+const usd=n=>n===null?'無報價':'US$'+n.toFixed(2);const tw=n=>n===null?'無報價':'約 NT$'+Math.round(n*fx).toLocaleString('zh-TW');
+const printLabel=p=>[p?.set?.toUpperCase(),p?.collector_number,p?.lang&&p.lang!=='en'?p.lang.toUpperCase():''].filter(Boolean).join(' · ');
+const priceLine=(p,f)=>{const v=availablePrice(p,f);return finishLabel(f)+' '+usd(v)+(v!==null?' / '+tw(v):'')};
+function cleanPrint(p){if(!p)return null;return {id:p.id,name:p.name,set:p.set,collector_number:p.collector_number,set_name:p.set_name,lang:p.lang,prices:p.prices||{},finishes:finishList(p),image_uris:p.image_uris||null,card_faces:p.card_faces?.map(x=>({image_uris:x.image_uris||null}))||null,scryfall_uri:p.scryfall_uri||'',type_line:p.type_line||'',color_identity:p.color_identity||[],games:p.games||[]};}
+function payload(){return {app:'MTGDeckStudio',schemaVersion:3,documentId,...meta,deck:deck.map(({elem,image,imgFallback,...c})=>c),fx,updatedAt:new Date().toISOString()}}
+const DB_NAME='MTGDeckStudioSafeLocal_v1',DB_STORE='documents'; // 舊版資料庫，只用於搬移
+const LIB_DB='MTGDeckLibrary_v1',LS_LIB='mtg_deck_library_v1';
+// 牌組庫：所有牌組依 documentId 存放，鑰匙與 HTML 檔名／路徑無關
+const store={kind:'none',db:null,
+ async init(){
+  if('indexedDB' in window){try{
+   this.db=await new Promise((res,rej)=>{const r=indexedDB.open(LIB_DB,1);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('decks'))d.createObjectStore('decks');if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv')};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);r.onblocked=()=>rej(new Error('資料庫被其他分頁鎖住'))});
+   this.db.onversionchange=()=>this.db.close();this.kind='IndexedDB';
+  }catch(e){console.warn('IndexedDB 不可用，改用 localStorage',e)}}
+  if(this.kind==='none'){try{localStorage.setItem(LS_LIB+'_probe','1');localStorage.removeItem(LS_LIB+'_probe');this.kind='localStorage'}catch(e){}}
+  try{navigator.storage?.persist?.()}catch(e){}
+ },
+ req(st,mode,fn){return new Promise((res,rej)=>{const t=this.db.transaction(st,mode);let out;const r=fn(t.objectStore(st));if(r)r.onsuccess=()=>{out=r.result};t.oncomplete=()=>res(out);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error||new Error('寫入中止'))})},
+ lsRead(){try{const v=JSON.parse(localStorage.getItem(LS_LIB)||'null');return v&&typeof v==='object'?{decks:v.decks||{},kv:v.kv||{}}:{decks:{},kv:{}}}catch(e){return {decks:{},kv:{}}}},
+ lsWrite(v){localStorage.setItem(LS_LIB,JSON.stringify(v))},
+ need(){if(this.kind==='none')throw new Error('此瀏覽器無法儲存資料')},
+ async all(){this.need();if(this.kind==='IndexedDB')return (await this.req('decks','readonly',s=>s.getAll()))||[];return Object.values(this.lsRead().decks)},
+ async get(id){this.need();if(this.kind==='IndexedDB')return (await this.req('decks','readonly',s=>s.get(id)))||null;return this.lsRead().decks[id]||null},
+ async put(rec){this.need();if(this.kind==='IndexedDB')return this.req('decks','readwrite',s=>{s.put(rec,rec.documentId)});const v=this.lsRead();v.decks[rec.documentId]=rec;this.lsWrite(v)},
+ async del(id){this.need();if(this.kind==='IndexedDB')return this.req('decks','readwrite',s=>{s.delete(id)});const v=this.lsRead();delete v.decks[id];this.lsWrite(v)},
+ async kvGet(k){if(this.kind==='none')return null;if(this.kind==='IndexedDB')return (await this.req('kv','readonly',s=>s.get(k)))??null;return this.lsRead().kv[k]??null},
+ async kvSet(k,val){if(this.kind==='none')return;if(this.kind==='IndexedDB')return this.req('kv','readwrite',s=>{s.put(val,k)});const v=this.lsRead();v.kv[k]=val;this.lsWrite(v)}
+};
+const library=new Map();const refreshedThisSession=new Set();let currentUpdatedAt='';
+let bc=null;try{bc=new BroadcastChannel('mtg-deck-library')}catch(e){}
+const byTitle=()=>[...library.values()].sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'zh-Hant'));
+const byRecent=()=>[...library.values()].sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+const deckCount=rec=>(rec.deck||[]).reduce((n,c)=>n+Number(c.qty||0),0);
+const fmtTime=iso=>{const t=Date.parse(iso||'');return t?new Date(t).toLocaleString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'—'};
+let saveOrder=0,writeQueue=Promise.resolve();
+function setStorageStatus(kind,message,details=''){
+ const indicator=el('storageIndicator');if(!indicator)return;
+ indicator.className='storage-indicator '+kind;indicator.textContent=message;indicator.title=details||message;
+}
+function save(){
+ if(!documentId)return Promise.resolve(false);
+ const order=++saveOrder;const rec=payload();library.set(rec.documentId,rec);currentUpdatedAt=rec.updatedAt;renderLibrarySwitch();
+ setStorageStatus('busy','儲存中…','正在寫入牌組庫');
+ writeQueue=writeQueue.catch(()=>{}).then(()=>store.put(rec));
+ return writeQueue.then(()=>{
+  if(order===saveOrder)setStorageStatus('good','✓ 已存入牌組庫','所有牌組存在此瀏覽器（'+store.kind+'），與 HTML 檔名無關。換電腦、換瀏覽器或清除瀏覽資料前，請先匯出全部備份。');
+  try{bc?.postMessage({id:rec.documentId,updatedAt:rec.updatedAt})}catch(e){}
+  return true;
+ }).catch(e=>{
+  console.warn('牌組庫寫入失敗',e);
+  if(order===saveOrder){setStorageStatus('bad','⚠ 未能儲存',String(e?.message||e));notify('⚠ 無法寫入瀏覽器儲存空間！請立即「工具 → 下載此牌組 JSON」或「匯出全部備份」。',true)}
+  return false;
+ });
+}
+// 把一副牌組顯示在畫面上（切換、匯入、新增都經過這裡）
+function showDeck(parsed,id,updatedAt=''){
+ epoch++;if(el('zoomModal').open)el('zoomModal').close();if(typeof closeArt==='function'&&el('artModal').open)closeArt();if(el('editModal').open)el('editModal').close();
+ documentId=id;deck=parsed.deck;fx=parsed.fx;meta=parsed.meta;currentUpdatedAt=updatedAt;
+ el('fx').value=fx;el('search').value='';el('type').value='';el('ownedFilter').value='';
+ refreshCategoryDropdown();render();updateBrand();renderLibrarySwitch();
+ store.kvSet('activeId',id).catch(()=>{});
+}
+function showEmpty(){
+ epoch++;documentId=null;deck=[];meta={title:'未命名牌組',format:'Commander',targetCount:100,budgetNT:null,commanderColors:[]};currentUpdatedAt='';
+ render();updateBrand();renderLibrarySwitch();store.kvSet('activeId',null).catch(()=>{});
+}
+function openDeck(id,{quiet=false}={}){
+ const rec=library.get(id);if(!rec)return false;
+ let parsed;try{parsed=parseDeckJSON({...rec,...rec.meta})}catch(e){notify('這副牌組資料無法讀取：'+e.message,true);return false}
+ showDeck(parsed,id,rec.updatedAt||'');
+ if(!quiet)notify('已開啟「'+meta.title+'」。');
+ if(deck.length&&!refreshedThisSession.has(id)){refreshedThisSession.add(id);refreshPrices()}
+ return true;
+}
+async function newDeck(){
+ const parsed={deck:[],fx,meta:{title:'新牌組 '+(library.size+1),format:'Commander',targetCount:100,budgetNT:null,commanderColors:[]}};
+ showDeck(parsed,newDocumentId());await save();
+ notify('已建立空白牌組「'+meta.title+'」。可按「工具 → ＋ 新增牌張」加入卡片，或到「牌組設定」改名。');
+}
+async function duplicateDeck(id){
+ const rec=library.get(id);if(!rec)return;
+ const copy={...JSON.parse(JSON.stringify(rec)),documentId:newDocumentId(),title:String(rec.title||'未命名牌組').slice(0,110)+'（複本）',updatedAt:new Date().toISOString()};
+ library.set(copy.documentId,copy);
+ try{await store.put(copy);bc?.postMessage({id:copy.documentId})}catch(e){notify('複製失敗：'+e.message,true);return}
+ openDeck(copy.documentId,{quiet:true});renderLibraryList();notify('已複製成「'+copy.title+'」。');
+}
+async function deleteDeck(id){
+ const rec=library.get(id);if(!rec)return;
+ if(!confirm('確定刪除「'+(rec.title||'未命名牌組')+'」（'+deckCount(rec)+' 張）？\n刪除後無法復原，建議先匯出備份。'))return;
+ library.delete(id);
+ try{await store.del(id);bc?.postMessage({id,deleted:true})}catch(e){notify('刪除失敗：'+e.message,true)}
+ if(id===documentId){const next=byRecent()[0];if(next)openDeck(next.documentId,{quiet:true});else showEmpty()}
+ renderLibrarySwitch();renderLibraryList();notify('已刪除「'+(rec.title||'未命名牌組')+'」。');
+}
+function exportDeckRecord(rec){download(safeFile(rec.title||'MTG_Deck')+'_backup.json',JSON.stringify(rec,null,2),'application/json')}
+async function exportAll(){
+ if(!library.size){notify('牌組庫是空的，沒有可匯出的牌組。',true);return}
+ const data={app:'MTGDeckStudio',type:'library',schemaVersion:3,exportedAt:new Date().toISOString(),decks:byTitle()};
+ const d=new Date(),stamp=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+ download('MTG_牌組庫備份_'+stamp+'.json',JSON.stringify(data,null,2),'application/json');
+ await store.kvSet('lastBackupAt',data.exportedAt).catch(()=>{});
+ renderLibraryList();notify('已匯出全部 '+library.size+' 副牌組。換電腦或換瀏覽器時，用「匯入 JSON／備份」即可還原。');
+}
+function renderLibrarySwitch(){
+ const sel=el('deckSwitch');if(!sel)return;
+ const list=byTitle();sel.replaceChildren();
+ if(!list.length){const o=document.createElement('option');o.textContent='（牌組庫是空的）';o.value='';sel.append(o);sel.disabled=true;return}
+ sel.disabled=false;
+ for(const rec of list){const o=document.createElement('option');o.value=rec.documentId;o.textContent=(rec.title||'未命名牌組')+'（'+deckCount(rec)+'）';sel.append(o)}
+ if(documentId&&library.has(documentId))sel.value=documentId;
+}
+async function renderLibraryList(){
+ const host=el('libList');if(!host)return;host.replaceChildren();
+ const last=await store.kvGet('lastBackupAt').catch(()=>null);
+ const info=el('libBackupInfo');const days=last?Math.floor((Date.now()-Date.parse(last))/86400000):null;
+ info.textContent='共 '+library.size+' 副牌組・上次匯出全部備份：'+(last?fmtTime(last)+(days>0?'（'+days+' 天前）':''):'從未');
+ info.classList.toggle('backupwarn',library.size>0&&(last===null||days>=14));
+ const list=byRecent();
+ if(!list.length){const d=document.createElement('div');d.className='libempty';d.textContent='牌組庫還是空的。按「＋ 新增空白牌組」或「匯入 JSON／備份」開始。';host.append(d);return}
+ for(const rec of list){
+  const row=document.createElement('div');row.className='librow'+(rec.documentId===documentId?' current':'');
+  row.innerHTML=`<div class="libinfo"><div class="libtitle">${esc(rec.title||'未命名牌組')}${rec.documentId===documentId?' <span class="pill">目前</span>':''}</div><div class="small muted">${esc(rec.format||'')}・${deckCount(rec)} 張・更新於 ${esc(fmtTime(rec.updatedAt))}</div></div>
+  <div class="libactions">${rec.documentId===documentId?'':`<button class="btnsmall btnprimary" data-lib="open" data-id="${esc(rec.documentId)}">開啟</button>`}<button class="btnsmall" data-lib="dup" data-id="${esc(rec.documentId)}">複製</button><button class="btnsmall" data-lib="export" data-id="${esc(rec.documentId)}">匯出 JSON</button><button class="btnsmall btnbad" data-lib="delete" data-id="${esc(rec.documentId)}">刪除</button></div>`;
+  host.append(row);
+ }
+}
+// 舊版資料（依檔案路徑保存的草稿、舊 IndexedDB、HTML 內建快照）搬進牌組庫
+function readOldLocalStorage(){
+ const out=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);
+  if(!k||!(k===LEGACY_KEY||k===DRAFT_KEY||k.startsWith(STORAGE_PREFIX)||k.startsWith('mtg_studio_file_v5_')))continue;
+  try{const v=JSON.parse(localStorage.getItem(k)||'null');if(v&&Array.isArray(v.deck)&&v.deck.length)out.push(v)}catch(e){}
+ }}catch(e){}return out;
+}
+function readOldIdb(){return new Promise(async res=>{
+ if(!('indexedDB' in window))return res([]);
+ try{if(indexedDB.databases){const l=await indexedDB.databases();if(!l.some(d=>d.name===DB_NAME))return res([])}}catch(e){}
+ let r;try{r=indexedDB.open(DB_NAME)}catch(e){return res([])}
+ r.onupgradeneeded=()=>{try{r.transaction.abort()}catch(e){}};r.onerror=()=>res([]);
+ r.onsuccess=()=>{const db=r.result;try{if(!db.objectStoreNames.contains(DB_STORE)){db.close();return res([])}const q=db.transaction(DB_STORE,'readonly').objectStore(DB_STORE).getAll();q.onsuccess=()=>{db.close();res((q.result||[]).filter(v=>v&&Array.isArray(v.deck)&&v.deck.length))};q.onerror=()=>{db.close();res([])}}catch(e){db.close();res([])}};
+})}
+const deckSignature=p=>JSON.stringify([p.meta.title,p.deck.map(c=>[c.name,c.qty,c.category,c.owned,c.manualNT,c.print?.id||'',c.finish])]);
+const cardListSignature=p=>JSON.stringify(p.deck.map(c=>[c.name,c.qty]).sort());
+// 加入牌組庫：完全相同的跳過；同一 ID 保留最新；同 ID 但卡表不同的另存一份
+async function addToLibrary(raws,{preferNewer=true}={}){
+ const sigs=new Set(),lists=new Map();
+ for(const rec of library.values()){try{const p=parseDeckJSON({...rec});sigs.add(deckSignature(p));lists.set(rec.documentId,cardListSignature(p))}catch(e){}}
+ const items=[];for(const v of raws){try{items.push({p:parseDeckJSON({...v,...v.meta}),at:v.updatedAt||v.exportedAt||''})}catch(e){}}
+ items.sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+ let added=0,updated=0,addedIds=[];
+ for(const {p,at} of items){
+  const sig=deckSignature(p);if(sigs.has(sig))continue;
+  let id=p.documentId,title=p.meta.title;const existing=id?library.get(id):null;
+  if(existing){
+   if(preferNewer&&String(at)>String(existing.updatedAt||'')){/* 較新：覆蓋 */}
+   else if(lists.get(id)===cardListSignature(p))continue; // 同一副牌的舊版本
+   else{id=newDocumentId();title=title.slice(0,110)+'（另一版本）'}
+  }
+  if(!id)id=newDocumentId();
+  const rec={app:'MTGDeckStudio',schemaVersion:3,documentId:id,...p.meta,title,deck:p.deck,fx:p.fx,updatedAt:at||new Date().toISOString()};
+  library.set(id,rec);await store.put(rec);sigs.add(sig);lists.set(id,cardListSignature(p));
+  existing&&id===p.documentId?updated++:added++;addedIds.push(id);
+ }
+ if(added||updated)try{bc?.postMessage({id:'*'})}catch(e){}
+ return {added,updated,ids:addedIds};
+}
+async function migrateOldData(){
+ if(await store.kvGet('migratedV6'))return 0;
+ const raws=[...readOldLocalStorage(),...await readOldIdb()];
+ const r=raws.length?await addToLibrary(raws):{added:0};
+ await store.kvSet('migratedV6',new Date().toISOString());
+ return r.added;
+}
+async function importEmbeddedSnapshot(){
+ let v=null;try{v=JSON.parse(el('embedded-state').textContent||'null')}catch(e){}
+ if(!v||!Array.isArray(v.deck)||!v.deck.length)return null;
+ const key=String(v.documentId||'')+'|'+String(v.updatedAt||v.exportedAt||'');
+ const seen=(await store.kvGet('seenEmbedded'))||[];if(seen.includes(key))return null;
+ const r=await addToLibrary([v]);await store.kvSet('seenEmbedded',[...seen,key].slice(-200));
+ return r.ids[0]||(v.documentId&&library.has(v.documentId)?v.documentId:null);
+}
+async function reloadLibrary(){library.clear();for(const rec of await store.all())if(rec&&rec.documentId&&Array.isArray(rec.deck))library.set(rec.documentId,rec)}
+// 其他分頁修改了牌組庫時同步
+if(bc)bc.onmessage=async e=>{
+ const {id,deleted}=e.data||{};if(!id)return;
+ try{
+  if(id==='*')await reloadLibrary();
+  else if(deleted)library.delete(id);
+  else{const rec=await store.get(id);if(rec)library.set(id,rec)}
+  renderLibrarySwitch();if(el('libraryModal').open)renderLibraryList();
+  if(documentId&&(id===documentId||id==='*')){
+   const rec=library.get(documentId);
+   if(!rec){const next=byRecent()[0];if(next)openDeck(next.documentId,{quiet:true});else showEmpty();notify('這副牌組已在其他分頁被刪除。',true);return}
+   const busy=el('artModal').open||el('editModal').open||el('settingsModal').open||document.activeElement?.matches?.('[data-role="seller"]');
+   if(String(rec.updatedAt||'')>String(currentUpdatedAt)&&!busy){const p=parseDeckJSON({...rec});epoch++;deck=p.deck;fx=p.fx;meta=p.meta;currentUpdatedAt=rec.updatedAt;el('fx').value=fx;render();updateBrand();notify('已同步其他分頁對「'+meta.title+'」的修改。')}
+  }
+ }catch(err){console.warn('同步失敗',err)}
+};
+
+function notify(s,bad=false){el('notice').textContent=s;el('notice').style.borderColor=bad?'#975d5d':'#5d684b'}
+function showPortableReminder(){}
+function calcType(p){const type=(p.type_line||'').split(' // ')[0];if(/Planeswalker/i.test(type))return '鵬洛客';if(/Creature/i.test(type))return '生物';if(/Land/i.test(type))return '地牌';if(/Artifact/i.test(type))return '神器';if(/Enchantment/i.test(type))return '結界';if(/Instant/i.test(type))return '瞬間';if(/Sorcery/i.test(type))return '巫術';return '生物'}
+const isBasic=c=>['Forest','Mountain','Swamp','Island','Plains','Wastes'].includes(c.name);
+function updateBrand(){el('deckTitle').textContent=documentId?meta.title:'尚未建立牌組';el('deckFormatBadge').textContent=documentId?meta.format+' · '+stats().qty+' 張':'匯入 JSON 開始';el('starter').classList.toggle('hidden',!!documentId);document.title=(documentId?meta.title+'｜':'')+'MTG Deck Studio';}
+function stats(){const qty=deck.reduce((n,c)=>n+c.qty,0),owned=deck.reduce((n,c)=>n+(c.owned?c.qty:0),0);let known=0,missing=0,cost=0,manualCount=0;for(const c of deck){if(c.owned)continue;const v=Number(c.manualNT);if(c.manualNT!==null&&c.manualNT!==''&&Number.isFinite(v)&&v>=0){cost+=v*c.qty;known+=c.qty;manualCount+=c.qty;continue}const p=availablePrice(c.print,chosenFinish(c));if(p===null)missing+=c.qty;else{cost+=p*fx*c.qty;known+=c.qty}}return {qty,owned,known,missing,cost,manualCount};}
+function summary(){el('summary').classList.toggle('hidden',!deck.length);const s=stats(),fmt=v=>Math.round(v).toLocaleString('zh-TW');const t=meta.targetCount;const targetText=t===null?'自訂':`/ ${t}`;
+ const budget=meta.budgetNT,available=budget===null?'未設定':'NT$'+fmt(budget-s.cost);
+ el('summary').innerHTML=`<span class="sum" title="牌組總張數"><span class="statlabel">牌組</span><b class="${t!==null&&s.qty!==t?'warn':'ok'}">${s.qty} ${targetText}</b></span><span class="sum"><span class="statlabel">已有／待購</span><b>${s.owned} / ${s.qty-s.owned}</b></span><span class="sum" title="缺價卡牌未計入"><span class="statlabel">已知價格</span><b>NT$${fmt(s.cost)}</b></span><span class="sum" title="預算差額未計入缺價卡牌"><span class="statlabel">預算差額</span><b class="${budget!==null&&budget-s.cost<0?'error':'ok'}">${available}</b></span>${s.missing?`<span class="missingstat">⚠ ${s.missing} 張缺價</span>`:''}`;}
+
+
+const ntFmt=n=>'NT$'+Math.round(n).toLocaleString('zh-TW');
+function sellerMarkup(c){
+ const f=chosenFinish(c),p=availablePrice(c.print,f),hasManual=c.manualNT!==null&&c.manualNT!=='';
+ const manual=hasManual?Number(c.manualNT):null;
+ const base=p===null?null:p*fx;
+ let comparison=`<div class="reference">國外參考：${usd(p)}${base!==null?' ≈ '+ntFmt(base):'（無台幣估價）'}</div>`;
+ if(manual!==null){
+   if(base===null){comparison+='<span class="mutednote">此版本無國外報價，無法比較價差</span>'}
+   else{
+     const diff=manual-base,abs=ntFmt(Math.abs(diff)),percent=base>0?' ('+(Math.abs(diff)/base*100).toFixed(0)+'%)':'';
+     if(Math.abs(diff)<0.5)comparison+='<span class="difference equal">與國外估價相近</span>';
+     else comparison+=`<span class="difference ${diff>0?'over':'under'}">${diff>0?'▲ 溢價 ':'▼ 較便宜 '}${abs}${percent}</span>`;
+   }
+ } else comparison+='<span class="mutednote">輸入台灣價格後顯示價差</span>';
+ return `<div class="compare" data-role="compare">${comparison}</div>`;
+}
+function updateSellerUI(c){
+ const card=c.elem;if(!card)return;
+ const comparison=card.querySelector('[data-role="compare"]');
+ if(comparison){const tmp=document.createElement('div');tmp.innerHTML=sellerMarkup(c);comparison.replaceWith(tmp.firstElementChild)}
+ summary();
+}
+
+let observer=null,visible=[];
+function render(){if(observer)observer.disconnect();const host=el('deck');host.replaceChildren();const q=el('search').value.toLowerCase().trim(),type=el('type').value,own=el('ownedFilter').value;visible=[];
+ for(const cat of categories){const all=deck.filter(c=>c.category===cat),match=all.filter(c=>(!q||c.name.toLowerCase().includes(q))&&(!type||cat===type)&&(!own||(c.owned?'yes':'no')===own));if(!match.length)continue;const sec=document.createElement('section');const total=all.reduce((n,c)=>n+c.qty,0);sec.innerHTML=`<h2>${cat} <span class="small muted">${total} 張${match.length!==all.length?'・顯示 '+match.length+' 種':''}</span></h2><div class="cards"></div>`;const grid=sec.querySelector('.cards');for(const c of match){visible.push(c);const art=document.createElement('article');art.className='card'+(c.owned?' owned':'');art.dataset.id=c.id;const f=chosenFinish(c);const p=availablePrice(c.print,f);const hasPrice=c.manualNT!==null&&c.manualNT!=='';
+ art.innerHTML=`<div class="frame"><div class="imgnotice">卡圖載入中…</div><img alt="${esc(c.name)}" title="點擊放大" loading="lazy" decoding="async"><span class="tag">×${c.qty}</span>${c.owned?'<span class="tag ownedtag">✓ 已有</span>':''}</div><div class="info">
+  <div class="cardtitle">${esc(c.name)}</div>
+  <div class="printmeta">${esc(printLabel(c.print)||'預設版本')} · ${finishLabel(f)}</div>
+  <label class="quick-owned"><input data-role="owned" data-id="${esc(c.id)}" type="checkbox" ${c.owned?'checked':''} aria-label="${esc(c.name)} 已持有">已持有<span class="ownedhint">${c.owned?'免購':'點擊即儲存'}</span></label>
+  ${sellerMarkup(c)}
+  <div class="quick-seller"><label for="seller_${esc(c.id)}">台灣店價</label><span class="nt-sign">NT$</span><input id="seller_${esc(c.id)}" data-role="seller" data-id="${esc(c.id)}" type="number" min="0" max="100000000" step="1" inputmode="numeric" placeholder="輸入價格" value="${hasPrice?esc(c.manualNT):''}" aria-label="${esc(c.name)} 台灣店家單張價格"><button type="button" class="clear-price" data-action="clearPrice" data-id="${esc(c.id)}" title="清除店價，改採國外參考價估算" aria-label="清除 ${esc(c.name)} 的台灣店價">×</button></div>
+  <div class="btnrow"><button data-action="art" data-id="${esc(c.id)}">異圖 / 閃卡</button><button data-action="edit" data-id="${esc(c.id)}">替換 / 數量</button></div></div>`;c.elem=art;c.image=art.querySelector('img');grid.append(art);c.image.addEventListener('load',()=>{art.querySelector('.imgnotice').classList.add('hidden')});c.image.addEventListener('error',()=>{if(!c.imgFallback){c.imgFallback=true;c.image.src=imgFallback(c.name)}else{art.querySelector('.imgnotice').textContent='圖片失敗，請更新重試';art.querySelector('.imgnotice').classList.remove('hidden');c.image.removeAttribute('src')}});}
+ host.append(sec);}
+ el('visibleCount').textContent=`顯示 ${visible.length} 種牌／${visible.reduce((n,c)=>n+c.qty,0)} 張`;updateBrand();
+ if('IntersectionObserver' in window){observer=new IntersectionObserver(entries=>{for(const item of entries)if(item.isIntersecting){const c=deck.find(c=>c.elem===item.target);if(c)loadImage(c);observer.unobserve(item.target)}},{rootMargin:'650px'});visible.forEach(c=>observer.observe(c.elem))}else visible.forEach(loadImage);summary();}
+function loadImage(c){if(!c.image)return;if(c.image.getAttribute('src'))return;const src=imgOf(c.print,'small')||imgFallback(c.name);c.imgFallback=false;c.image.src=src;}
+async function fetchJSON(url,opt={}){const r=await fetch(url,{...opt,headers:{'Accept':'application/json',...opt.headers}});if(!r.ok)throw Error('Scryfall HTTP '+r.status);return r.json()}
+const pause=ms=>new Promise(res=>setTimeout(res,ms));
+let refreshing=false;
+async function refreshPrices(){if(refreshing||!deck.length)return;const generation=epoch;refreshing=true;el('reloadPrices').disabled=true;notify('查詢 Scryfall：逐批更新當前選擇的印刷版本與價錢…');
+ try{const refs=new Map();for(const c of deck){const key=c.print?.id?'id:'+c.print.id:'name:'+faceName(c.name).toLowerCase();if(!refs.has(key))refs.set(key,{key,id:c.print?.id||null,name:faceName(c.name)})}const arr=[...refs.values()];let resolved=0,errors=0;
+ for(let j=0;j<arr.length;j+=75){if(generation!==epoch)return;if(j)await pause(750);const batch=arr.slice(j,j+75);try{const ret=await fetchJSON(API+'/cards/collection',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifiers:batch.map(x=>x.id?{id:x.id}:{name:x.name})})});if(generation!==epoch)return;const found=ret.data||[];for(const p of found){const cp=cleanPrint(p);let matched=false;for(const c of deck){if(c.print?.id&&c.print.id===p.id){c.print=cp;resolved++;matched=true}else if(!c.print?.id&&faceName(c.name).toLowerCase()===faceName(p.name).toLowerCase()){c.print=cp;resolved++;matched=true}}}errors+=(ret.not_found||[]).length;
+ }catch(e){errors+=batch.length;notify('批次價格查詢失敗。可能是網路、跨網域或 Scryfall 限流；目前已儲存的牌圖與價格仍保留。',true)} }
+ if(generation!==epoch)return;save();render();notify(`卡圖與價格更新完成：${resolved} 張獲得 Scryfall 印刷資料，${errors} 個查詢項目未找到／失敗。本次查詢：${new Date().toLocaleString('zh-TW')}。缺價會標示無報價。`);
+ }finally{refreshing=false;el('reloadPrices').disabled=false;if(generation!==epoch&&deck.length)setTimeout(refreshPrices,800)}}
+function download(name,content,mime){const a=document.createElement('a');const url=URL.createObjectURL(new Blob([content],{type:mime}));a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+function safeFile(x){return String(x).replace(/[\\/:*?"<>|]/g,'_').slice(0,65)||'MTG_Deck'}
+function exportJson(){download(safeFile(meta.title)+'_backup.json',JSON.stringify(payload(),null,2),'application/json')}
+function exportTxt(){download(safeFile(meta.title)+'_Moxfield.txt',deck.map(c=>c.qty+' '+c.name).join('\n')+'\n','text/plain;charset=utf-8')}
+function refreshCategoryDropdown(){const val=el('type').value;el('type').innerHTML='<option value="">全部牌型</option>'+categories.map(cat=>`<option value="${cat}">${cat}</option>`).join('');el('type').value=val;}
+// ART MODAL: local transient state MUST be destroyed on close. Every async load validates current generation.
+let art=null,artGen=0,artLoadGen=0;const artModal=el('artModal');
+function resetArtUI(){el('artTitle').textContent='選擇異圖';el('artSubtitle').textContent='';el('artPreview').removeAttribute('src');el('artDetails').textContent='';el('artPrice').textContent='';el('finishButtons').replaceChildren();el('artOptions').replaceChildren();el('artStatus').textContent='';el('artError').textContent='';el('artError').classList.add('hidden');el('moreArt').classList.add('hidden');el('artScry').removeAttribute('href')}
+function disposeArt(){artGen++;artLoadGen++;if(art?.controller)art.controller.abort();art=null;resetArtUI()}
+artModal.addEventListener('close',()=>{if(!artModal.open)disposeArt()});
+function closeArt(){if(artModal.open)artModal.close();disposeArt()}
+function setArtError(msg){el('artError').textContent=msg;el('artError').classList.remove('hidden')}
+function versionTile(p,idx){const btn=document.createElement('button');btn.type='button';btn.className='variant'+(idx===art.pick?' active':'');const v=finishList(p);btn.innerHTML=`<img loading="lazy" alt="版本 ${idx+1}"><span>${esc(printLabel(p))}</span><span class="p">${v.map(f=>finishLabel(f)+' '+usd(availablePrice(p,f))).join('<br>')}</span>`;btn.querySelector('img').src=imgOf(p,'small')||imgFallback(art?.card?.name||p.name);btn.onclick=()=>chooseArt(idx);return btn}
+function drawArtOptions(){if(!art)return;el('artOptions').replaceChildren();for(let i=0;i<Math.min(art.shown,art.options.length);i++)el('artOptions').append(versionTile(art.options[i],i));el('moreArt').classList.toggle('hidden',art.shown>=art.options.length&&!art.next);}
+function displaySelected(p){if(!art)return;el('artPreview').src=imgOf(p,'normal')||imgOf(p,'small')||imgFallback(art.card.name);el('artDetails').textContent=printLabel(p)+'｜'+(p.set_name||'')+'｜'+(p.lang||'en');el('artScry').href=p.scryfall_uri||scryLink(art.card.name);const c=art.card;const finish=chosenFinish(c);el('artPrice').innerHTML='<b>'+priceLine(p,finish)+'</b>';el('finishButtons').replaceChildren();for(const f of finishList(p)){const b=document.createElement('button');b.type='button';b.className='btnsmall'+(finish===f?' active':'');b.textContent=finishLabel(f)+'｜'+usd(availablePrice(p,f));b.onclick=()=>{c.finish=f;save();displaySelected(p);render()};el('finishButtons').append(b)}}
+function chooseArt(i){if(!art||i<0||i>=art.options.length)return;art.pick=i;const p=art.options[i];art.card.print=cleanPrint(p);if(!finishList(p).includes(art.card.finish))art.card.finish=finishList(p)[0];save();displaySelected(p);drawArtOptions();render()}
+function openArt(c){if(artModal.open)closeArt();else disposeArt();const gen=++artGen;art={gen,card:c,mode:'art',options:[],next:null,shown:0,pick:0,controller:new AbortController()};el('artTitle').textContent=c.name;el('artSubtitle').textContent='點小圖即選擇印刷版本，然後切換「一般／閃卡／刻蝕閃」；價格分別計算';if(c.print)displaySelected(c.print);else{el('artPreview').src=imgFallback(c.name);el('artPrice').textContent='印刷版本及價格讀取中…'}artModal.showModal();loadArtPrints()}
+async function loadArtPrints(){if(!art)return;const context=art;const localGen=++artLoadGen;const oldController=context.controller;if(oldController)oldController.abort();context.controller=new AbortController();const signal=context.controller.signal;context.options=[];context.shown=0;context.pick=0;context.next=null;el('artOptions').replaceChildren();el('artError').classList.add('hidden');el('artStatus').textContent='從 Scryfall 載入版本中…';el('modeArt').classList.toggle('active',context.mode==='art');el('modeAll').classList.toggle('active',context.mode==='prints');
+ try{const q='!"'+faceName(context.card.name).replace(/"/g,'')+'" game:paper';const u=API+'/cards/search?q='+encodeURIComponent(q)+'&unique='+context.mode+'&order=released&dir=desc';const data=await fetchJSON(u,{signal});if(art!==context||!artModal.open||localGen!==artLoadGen)return;context.options=(data.data||[]).filter(p=>imgOf(p,'small'));context.next=data.has_more?data.next_page:null;context.shown=Math.min(24,context.options.length);let idx=context.options.findIndex(p=>p.id===context.card.print?.id);context.pick=idx>=0?idx:0;
+ if(context.options.length){if(idx<0){displaySelected(context.card.print||context.options[0])}else displaySelected(context.options[idx]);drawArtOptions();el('artStatus').textContent=`載入 ${context.options.length} 個版本${context.next?'，可繼續載入':''}；小圖下方顯示一般／閃卡價格。`;}else{el('artStatus').textContent='無可用紙本版本'}}
+ catch(e){if(art!==context||localGen!==artLoadGen||e.name==='AbortError')return;el('artStatus').textContent='版本載入失敗';setArtError(e.message+'。可稍後再試，已有版本不受影響。')}}
+async function moreArt(){if(!art)return;if(art.shown<art.options.length){art.shown=Math.min(art.options.length,art.shown+24);drawArtOptions();return}if(!art.next)return;const context=art,req=artLoadGen,u=art.next;el('moreArt').disabled=true;el('artStatus').textContent='載入更多印刷版本…';try{const data=await fetchJSON(u,{signal:context.controller.signal});if(art!==context||artLoadGen!==req)return;context.options.push(...(data.data||[]).filter(p=>imgOf(p,'small')));context.next=data.has_more?data.next_page:null;context.shown=Math.min(context.options.length,context.shown+24);drawArtOptions();el('artStatus').textContent=`已載入 ${context.options.length} 個版本`;}catch(e){if(art===context&&e.name!=='AbortError')setArtError('載入更多版本失敗：'+e.message)}finally{el('moreArt').disabled=false}}
+// EDIT MODAL: candidate is fetched and checked before replacement
+let editing=null,candidate=null,adding=false,editGen=0,autoController=null;const editModal=el('editModal');
+function clearCandidate(){candidate=null;el('editCandidate').classList.add('hidden');el('editWarning').classList.add('hidden');el('editMsg').textContent='';el('confirmReplace').disabled=true}
+editModal.addEventListener('close',()=>{editing=null;adding=false;clearCandidate();el('editName').value='';el('suggestedCards').replaceChildren();editGen++;if(autoController)autoController.abort();});
+function editCard(c){adding=false;editing=c;el('confirmReplace').textContent='確認替換牌張';el('editModalTitle').textContent='編輯／替換牌張';el('deleteCard').classList.remove('hidden');el('saveMeta').classList.remove('hidden');el('editQty').value=c.qty;el('addCommanderLabel').classList.add('hidden');clearCandidate();el('editName').value='';el('editCurrent').textContent=`目前：${c.name}（${c.category}｜${c.qty} 張）`;editModal.showModal();el('editName').focus()}
+function addCard(){adding=true;editing={id:'new',name:'',qty:1,owned:false,category:'生物',manualNT:null};el('editModalTitle').textContent='新增牌張';el('deleteCard').classList.add('hidden');el('saveMeta').classList.add('hidden');clearCandidate();el('editName').value='';el('editCurrent').textContent='查詢正確牌名後按「確認新增」，程式會自動判斷牌型。';el('editQty').value=1;el('addCommanderLabel').classList.toggle('hidden',meta.format!=='Commander');el('addCommander').checked=meta.format==='Commander'&&!deck.some(c=>c.category==='指揮官');el('confirmReplace').textContent='確認新增牌張';editModal.showModal();el('editName').focus()}
+async function autoComplete(){if(!editModal.open)return;const query=el('editName').value.trim();if(query.length<3)return;const id=++editGen;if(autoController)autoController.abort();autoController=new AbortController();try{await pause(250);if(id!==editGen)return;const res=await fetchJSON(API+'/cards/autocomplete?q='+encodeURIComponent(query),{signal:autoController.signal});if(id!==editGen||!editModal.open)return;el('suggestedCards').replaceChildren();for(const n of (res.data||[]).slice(0,20)){const o=document.createElement('option');o.value=n;el('suggestedCards').append(o)}}catch(e){}}
+async function lookupCandidate(){if(!editing)return;const name=el('editName').value.trim();if(!name){el('editMsg').textContent='請輸入欲替換的牌名';return}clearCandidate();el('findCard').disabled=true;el('editMsg').textContent='搜尋 Scryfall 中…';const req=++editGen;
+ try{const p=await fetchJSON(API+'/cards/named?fuzzy='+encodeURIComponent(name));if(req!==editGen||!editModal.open)return;candidate=p;el('editCandidate').classList.remove('hidden');el('candidateName').textContent=p.name;el('candidateDetails').textContent=[p.type_line,p.mana_cost,(p.color_identity||[]).join('')].filter(Boolean).join(' · ');el('candidateImage').src=imgOf(p,'small')||imgFallback(p.name);el('candidatePrice').textContent=finishList(p).map(f=>priceLine(p,f)).join(' / ');
+ const ci=p.color_identity||[];const bad=meta.format==='Commander'&&meta.commanderColors.length?ci.filter(x=>!meta.commanderColors.includes(x)):[];const other=meta.format==='Commander'?deck.find(x=>x!==editing&&x.name.toLowerCase()===p.name.toLowerCase()&&!isBasic(x)):null;let err='';if(bad.length)err='這張牌有超出目前牌組設定色組的顏色：'+bad.join(', ')+'。可在「牌組設定」修改色組。';else if(other)err='Commander 牌組已有這張非基本地單卡';else if(((adding&&el('addCommander').checked)||(!adding&&editing?.category==='指揮官'))&&!(/Legendary/i.test(p.type_line)&&/Creature/i.test(p.type_line))&&!/can be your commander/i.test(p.oracle_text||''))err='指揮官位置通常需要傳奇生物，或具有可以擔任指揮官敘述的特殊牌';else if(p.games&&!p.games.includes('paper'))err='這張牌沒有可用的實體紙牌版本';if(err){el('editWarning').textContent=err;el('editWarning').classList.remove('hidden');el('confirmReplace').disabled=true}else el('confirmReplace').disabled=false;el('editMsg').textContent='請核對候選牌名與顏色，然後確認替換。';
+ }catch(e){el('editMsg').textContent='查詢失敗：'+e.message;el('editMsg').className='error'}finally{el('findCard').disabled=false}}
+function applyOwned(){if(!editing||adding)return;const qty=Number(el('editQty').value);if(!Number.isSafeInteger(qty)||qty<1||qty>250){el('editMsg').textContent='數量必須是 1～250';return}editing.qty=qty;save();render();el('editMsg').textContent='已儲存數量。持有狀態與台灣店價請直接在卡片上更改。';el('editMsg').className='ok'}
+function replaceCard(){if(!editing||!candidate||el('confirmReplace').disabled)return;const original=editing,p=candidate,qty=Number(el('editQty').value);
+ if(!Number.isSafeInteger(qty)||qty<1||qty>250){el('editMsg').textContent='數量必須是 1～250';return}
+ const copy={id:original.id,name:p.name,qty:adding?qty:1,owned:false,category:adding&&el('addCommander').checked?'指揮官':!adding&&original.category==='指揮官'?'指揮官':calcType(p),manualNT:null,print:cleanPrint(p),finish:finishList(p)[0]};
+ if(adding){copy.id='card_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);deck.push(copy)}else if(original.qty>1){original.qty-=1;copy.id='card_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);deck.push(copy)}else Object.assign(original,copy);
+ const wasAdding=adding;save();const name=copy.name;editModal.close();refreshCategoryDropdown();render();notify((wasAdding?'已新增 ':'已替換成 ')+name+'，目前 '+stats().qty+' 張。')}
+function deleteEditing(){if(!editing||adding)return;const c=editing;const what=c.qty>1?'移除 1 張 '+c.name:'刪除 '+c.name;if(!confirm('確定'+what+'？'))return;if(c.qty>1)c.qty--;else deck=deck.filter(x=>x!==c);save();editModal.close();render();notify('已移除：'+what+'，目前 '+stats().qty+' 張')}
+// event bindings
+let lastHoverId=null;el('deck').addEventListener('pointerover',e=>{if(e.pointerType!=='mouse')return;const f=e.target.closest('.frame');const id=f?.closest('.card')?.dataset.id;if(!id||id===lastHoverId)return;lastHoverId=id;preloadZoom(byId().get(id))});
+el('deck').addEventListener('click',e=>{
+ const frame=e.target.closest('.frame');
+ if(frame&&!e.target.closest('[data-action]')){const c=byId().get(frame.closest('.card')?.dataset.id);if(c){openZoom(c);return}}
+ const btn=e.target.closest('[data-action]');if(!btn)return;
+ const c=byId().get(btn.dataset.id);if(!c)return;
+ if(btn.dataset.action==='art')openArt(c);
+ else if(btn.dataset.action==='edit')editCard(c);
+ else if(btn.dataset.action==='clearPrice'){
+   c.manualNT=null;save();
+   const input=c.elem?.querySelector('[data-role="seller"]');if(input)input.value='';
+   updateSellerUI(c);
+ }
+});
+el('deck').addEventListener('change',e=>{
+ if(e.target.matches('[data-role="owned"]')){
+   const c=byId().get(e.target.dataset.id);if(!c)return;
+   c.owned=e.target.checked;save();
+   if(el('ownedFilter').value)render();
+   else{
+     c.elem?.classList.toggle('owned',c.owned);
+     const tag=c.elem?.querySelector('.ownedtag');
+     if(tag&&!c.owned)tag.remove();
+     else if(!tag&&c.owned){const badge=document.createElement('span');badge.className='tag ownedtag';badge.textContent='✓ 已有';c.elem?.querySelector('.frame')?.append(badge)}
+     const hint=c.elem?.querySelector('.ownedhint');if(hint)hint.textContent=c.owned?'免購':'點擊即儲存';
+     summary();
+   }
+ }
+});
+function applySellerInput(input,finalize=false){
+ const c=byId().get(input.dataset.id);if(!c)return;
+ const val=input.value.trim();
+ if(val!==''&&(!Number.isFinite(Number(val))||Number(val)<0||Number(val)>100000000)){
+   input.setCustomValidity('請輸入 0 到 100,000,000 的價格');if(finalize)input.reportValidity();return;
+ }
+ input.setCustomValidity('');
+ c.manualNT=val===''?null:Number(val);
+ save();updateSellerUI(c);
+}
+el('deck').addEventListener('input',e=>{if(e.target.matches('[data-role="seller"]'))applySellerInput(e.target)});
+el('deck').addEventListener('change',e=>{if(e.target.matches('[data-role="seller"]'))applySellerInput(e.target,true)});
+
+// 點圖放大：顯示大圖，雙面牌同時顯示兩面；可用 ← → 或左右滑動切換
+const zoomModal=el('zoomModal');let zoomCard=null,zoomGen=0;
+function zoomSources(c){
+ const p=c.print,faces=(p?.card_faces||[]).filter(f=>f?.image_uris);
+ if(!p?.image_uris&&faces.length>1)return faces.map(f=>({large:f.image_uris.large||f.image_uris.normal||f.image_uris.small,small:f.image_uris.small||''}));
+ const large=imgOf(p,'large')||imgOf(p,'normal');
+ return [{large:large||API+'/cards/named?exact='+encodeURIComponent(faceName(c.name))+'&format=image&version=large',small:imgOf(p,'small')||c.image?.currentSrc||''}];
+}
+// 大圖快取：滑鼠移到卡圖上就先下載，點下去通常已經載好
+const zoomCache=new Map();
+function loadBig(url,fallback){
+ let rec=zoomCache.get(url);if(rec)return rec;
+ rec=new Promise(res=>{const im=new Image();im.decoding='async';
+  im.onload=()=>res(im);
+  im.onerror=()=>{if(fallback&&im.src!==fallback){im.src=fallback}else res(null)};
+  im.src=url});
+ zoomCache.set(url,rec);if(zoomCache.size>80)zoomCache.delete(zoomCache.keys().next().value);
+ return rec;
+}
+const namedLarge=(c,i)=>API+'/cards/named?exact='+encodeURIComponent(faceName(c.name))+'&format=image&version=large'+(i?'&face=back':'');
+function preloadZoom(c){if(c)zoomSources(c).forEach((s,i)=>loadBig(s.large,namedLarge(c,i)))}
+function showZoom(c){
+ zoomCard=c;const gen=++zoomGen;const srcs=zoomSources(c);const box=el('zoomImgs');box.replaceChildren();box.classList.toggle('two',srcs.length>1);
+ srcs.forEach((s,i)=>{
+  const alt=c.name+(srcs.length>1?(i?'（背面）':'（正面）'):'');
+  // 大圖載好之前只顯示同尺寸的空白卡框，不先顯示模糊的小圖
+  const ph=document.createElement('div');ph.className='zoomph';ph.setAttribute('aria-label','載入中');ph.innerHTML='<span class="zoomspin"></span>';box.append(ph);
+  loadBig(s.large,namedLarge(c,i)).then(im=>{
+   if(gen!==zoomGen||!ph.isConnected)return;
+   if(!im){ph.innerHTML='<span class="small">圖片載入失敗</span>';return}
+   const img=document.createElement('img');img.alt=alt;img.src=im.src;ph.replaceWith(img);
+  });
+ });
+ el('zoomName').textContent=c.name+'　×'+c.qty;
+ const idx=visible.indexOf(c);
+ el('zoomMeta').textContent=[printLabel(c.print)||'預設版本',finishLabel(chosenFinish(c)),c.owned?'✓ 已有':'',idx>=0?(idx+1)+' / '+visible.length:''].filter(Boolean).join('・');
+ const many=visible.length>1&&idx>=0;el('zoomPrev').classList.toggle('hidden',!many);el('zoomNext').classList.toggle('hidden',!many);
+ // 預先下載前後兩張，切換時不用等
+ if(many){preloadZoom(visible[(idx+1)%visible.length]);preloadZoom(visible[(idx-1+visible.length)%visible.length])}
+}
+function openZoom(c){showZoom(c);if(!zoomModal.open)zoomModal.showModal();el('zoomClose').focus()}
+function stepZoom(d){if(!zoomCard||visible.length<2)return;const i=visible.indexOf(zoomCard);if(i<0)return;showZoom(visible[(i+d+visible.length)%visible.length])}
+el('zoomClose').onclick=()=>zoomModal.close();el('zoomPrev').onclick=e=>{e.stopPropagation();stepZoom(-1)};el('zoomNext').onclick=e=>{e.stopPropagation();stepZoom(1)};
+zoomModal.addEventListener('click',e=>{if(!e.target.closest('.zoomnav,.zoomcap'))zoomModal.close()});
+zoomModal.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();stepZoom(-1)}else if(e.key==='ArrowRight'){e.preventDefault();stepZoom(1)}});
+zoomModal.addEventListener('close',()=>{zoomGen++;zoomCard=null;el('zoomImgs').replaceChildren()});
+let zoomTouchX=null;zoomModal.addEventListener('touchstart',e=>{zoomTouchX=e.touches[0].clientX},{passive:true});
+zoomModal.addEventListener('touchend',e=>{if(zoomTouchX===null)return;const dx=e.changedTouches[0].clientX-zoomTouchX;zoomTouchX=null;if(Math.abs(dx)>50){stepZoom(dx<0?1:-1)}},{passive:true});
+el('closeArt').onclick=closeArt;artModal.addEventListener('click',e=>{if(e.target===artModal)closeArt()});el('modeArt').onclick=()=>{if(!art||art.mode==='art')return;art.mode='art';loadArtPrints()};el('modeAll').onclick=()=>{if(!art||art.mode==='prints')return;art.mode='prints';loadArtPrints()};el('moreArt').onclick=moreArt;el('artPrev').onclick=()=>{if(art?.options.length)chooseArt((art.pick-1+art.options.length)%art.options.length)};el('artNext').onclick=()=>{if(art?.options.length)chooseArt((art.pick+1)%art.options.length)};
+el('closeEdit').onclick=()=>editModal.close();el('editName').oninput=()=>{clearCandidate();autoComplete()};el('findCard').onclick=lookupCandidate;el('saveMeta').onclick=applyOwned;el('confirmReplace').onclick=replaceCard;el('deleteCard').onclick=deleteEditing;el('editName').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();lookupCandidate()}};
+for(const id of ['search','type','ownedFilter'])el(id).addEventListener(id==='search'?'input':'change',render);el('clearFilter').onclick=()=>{el('search').value='';el('type').value='';el('ownedFilter').value='';render()};el('fx').value=fx;el('fx').onchange=()=>{const v=Number(el('fx').value);if(Number.isFinite(v)&&v>0&&v<100){fx=v;save();render()}else el('fx').value=fx};
+// Make sticky navigation a single row after scrolling, keeping all editor tools accessible.
+const topToolbar=el('topToolbar');let scrollPending=false;
+function updateToolbarScroll(){topToolbar.classList.toggle('scrolled',window.scrollY>170);scrollPending=false}
+window.addEventListener('scroll',()=>{if(scrollPending)return;scrollPending=true;window.requestAnimationFrame(updateToolbarScroll)},{passive:true});updateToolbarScroll();
+document.addEventListener('pointerdown',e=>{const menu=el('toolsDetails');if(menu.open&&!menu.contains(e.target))menu.open=false});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')el('toolsDetails').open=false});
+// Universal JSON import and workspace management
+const jsonTemplate={schemaVersion:3,title:'我的 Commander 套牌',format:'Commander',targetCount:100,budgetNT:5000,commanderColors:['B','R','G'],fx:32.5,deck:[
+ {name:'Indoraptor, the Perfect Hybrid',qty:1,category:'指揮官',owned:true},
+ {name:'Sol Ring',qty:1,category:'神器',owned:false,manualNT:35},
+ {name:'Forest',qty:8,category:'地牌',owned:false}
+]};
+let pendingImport=null;const importModal=el('importModal');
+function validateText(){pendingImport=null;el('importConfirm').disabled=true;try{const raw=el('jsonText').value.trim();if(!raw)throw Error('請先選擇 .json 檔案或貼上 JSON 內容');const obj=JSON.parse(raw);if(obj&&obj.type==='library'&&Array.isArray(obj.decks)){validateLibrary(obj);return}const parsed=parseDeckJSON(obj);parsed.updatedAt=obj.updatedAt||'';pendingImport=parsed;const total=parsed.deck.reduce((n,c)=>n+c.qty,0);const warnings=[];if(parsed.meta.targetCount!==null&&total!==parsed.meta.targetCount)warnings.push('目標 '+parsed.meta.targetCount+' 張，目前 '+total+' 張；可先匯入再修改。');
+ const dup=new Map();if(parsed.meta.format==='Commander')for(const c of parsed.deck){if(!isBasic(c)){dup.set(c.name,(dup.get(c.name)||0)+c.qty)}}
+ const duplicates=[...dup].filter(([,n])=>n>1).map(([n])=>n);if(duplicates.length)warnings.push('可能重複的非基本地單卡：'+duplicates.slice(0,5).join('、'));
+ el('importResult').textContent=`✓ 格式檢查成功\n牌組：${parsed.meta.title}\n賽制：${parsed.meta.format}\n張數：${total}，種類：${parsed.deck.length}\n持有：${parsed.deck.reduce((n,c)=>n+(c.owned?c.qty:0),0)}\n`+(warnings.length?'\n提醒：'+warnings.join('；'):'')+'\n確認後會新增到牌組庫，不影響其他牌組。';el('importResult').classList.remove('error');el('importResult').classList.add('ok');el('importConfirm').disabled=false;
+ }catch(e){el('importResult').textContent='✕ 格式錯誤：'+e.message;el('importResult').classList.remove('ok');el('importResult').classList.add('error')}}
+function validateLibrary(obj){
+ const ok=[],bad=[];obj.decks.forEach((d,i)=>{try{parseDeckJSON({...d,...d.meta});ok.push(d)}catch(e){bad.push((d&&d.title)||('第 '+(i+1)+' 副'))}});
+ if(!ok.length)throw Error('備份檔裡沒有可讀取的牌組');
+ pendingImport={library:ok};
+ el('importResult').textContent='✓ 這是牌組庫備份檔\n可還原：'+ok.length+' 副牌組'+(bad.length?'\n無法讀取：'+bad.join('、'):'')+'\n\n確認後：新的牌組會加入；牌組庫已有的同一副牌組，以較新的版本為準；其他牌組不受影響。';
+ el('importResult').classList.remove('error');el('importResult').classList.add('ok');el('importConfirm').disabled=false;
+}
+function openImport(){pendingImport=null;el('jsonText').value='';el('importResult').textContent='請選擇 JSON 檔案或貼入文字。';el('importConfirm').disabled=true;el('toolsDetails').open=false;importModal.showModal()}
+el('importBtn').onclick=openImport;el('importQuick').onclick=openImport;el('startImport').onclick=openImport;el('chooseJson').onclick=()=>el('importFile').click();el('closeImport').onclick=()=>importModal.close();el('validateJson').onclick=validateText;
+el('jsonText').addEventListener('input',()=>{pendingImport=null;el('importConfirm').disabled=true;el('importResult').textContent='文字已更新，請先按「檢查格式」。'});
+el('fillTemplate').onclick=()=>{el('jsonText').value=JSON.stringify(jsonTemplate,null,2);validateText()};
+el('importFile').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{if(f.size>8*1024*1024)throw Error('JSON 檔案不可超過 8 MB');el('jsonText').value=await f.text();if(!importModal.open)importModal.showModal();validateText()}catch(err){el('importResult').textContent='讀取失敗：'+err.message;el('importConfirm').disabled=true}finally{e.target.value=''}};
+el('importConfirm').onclick=async()=>{if(!pendingImport)return;const pending=pendingImport;pendingImport=null;importModal.close();if(el('libraryModal').open)el('libraryModal').close();
+ if(pending.library){try{const r=await addToLibrary(pending.library);renderLibrarySwitch();if(r.ids[0])openDeck(r.ids[0],{quiet:true});else if(!documentId&&library.size)openDeck(byRecent()[0].documentId,{quiet:true});notify('備份還原完成：新增 '+r.added+' 副、更新 '+r.updated+' 副'+(r.added+r.updated===0?'（牌組庫已是最新）':'')+'。目前共 '+library.size+' 副牌組。')}catch(e){notify('還原失敗：'+e.message,true)}return}
+ const same=pending.documentId&&library.get(pending.documentId);
+ if(same){const overwrite=confirm('牌組庫已經有這副牌組「'+(same.title||'未命名牌組')+'」（更新於 '+fmtTime(same.updatedAt)+'）。\n\n按「確定」用匯入的內容覆蓋它；按「取消」另存成一副新牌組。');commitImport(pending,{overwriteId:overwrite?pending.documentId:null});return}
+ commitImport(pending)};
+function downloadTemplate(){download('MTG_Deck_Studio_Template.json',JSON.stringify(jsonTemplate,null,2)+'\n','application/json')}
+el('templateBtn').onclick=downloadTemplate;el('startTemplate').onclick=downloadTemplate;
+
+
+function loadExample(){const data={title:'Indoraptor V6.2｜示範牌組',format:'Commander',targetCount:100,budgetNT:5000,commanderColors:['B','R','G'],fx:32.5,deck:sampleDeck};commitImport(parseDeckJSON(data))}
+el('exampleBtn').onclick=loadExample;el('startExample').onclick=loadExample;
+el('reloadPrices').onclick=()=>refreshPrices();el('exportJson').onclick=()=>{if(!documentId){notify('目前沒有開啟的牌組。',true);return}exportJson()};el('exportAll').onclick=exportAll;el('exportTxt').onclick=exportTxt;
+const libraryModal=el('libraryModal');
+function openLibrary(){el('toolsDetails').open=false;renderLibraryList();libraryModal.showModal()}
+el('openLibrary').onclick=openLibrary;el('openLibraryTool').onclick=openLibrary;el('closeLibrary').onclick=()=>libraryModal.close();
+libraryModal.addEventListener('click',e=>{if(e.target===libraryModal)libraryModal.close()});
+el('libNew').onclick=async()=>{libraryModal.close();await newDeck()};el('libImport').onclick=()=>{libraryModal.close();openImport()};el('libExportAll').onclick=exportAll;
+el('libList').addEventListener('click',e=>{const b=e.target.closest('[data-lib]');if(!b)return;const id=b.dataset.id,act=b.dataset.lib;
+ if(act==='open'){libraryModal.close();openDeck(id)}else if(act==='dup')duplicateDeck(id);else if(act==='export'){const rec=library.get(id);if(rec)exportDeckRecord(rec)}else if(act==='delete')deleteDeck(id)});
+el('deckSwitch').onchange=e=>{const id=e.target.value;if(id&&id!==documentId)openDeck(id)};
+el('addCard').onclick=async()=>{el('toolsDetails').open=false;if(!documentId)await newDeck();addCard()};
+el('resetDeck').onclick=()=>{el('toolsDetails').open=false;newDeck()};
+const settingsModal=el('settingsModal');el('deckSettings').onclick=()=>{el('toolsDetails').open=false;if(!documentId){notify('請先新增或匯入一副牌組。',true);return}el('settingTitle').value=meta.title;el('settingFormat').value=[...el('settingFormat').options].some(x=>x.value===meta.format)?meta.format:'Custom';el('settingTarget').value=meta.targetCount??'';el('settingBudget').value=meta.budgetNT??'';el('settingColors').value=meta.commanderColors.join(', ');settingsModal.showModal()};
+el('closeSettings').onclick=()=>settingsModal.close();el('settingFormat').onchange=()=>{const val=el('settingFormat').value;if(!el('settingTarget').value)el('settingTarget').value=formatDefaultTarget(val)??''};
+el('saveSettings').onclick=()=>{const title=el('settingTitle').value.trim()||'未命名牌組',format=el('settingFormat').value,target=el('settingTarget').value,budget=el('settingBudget').value,colors=el('settingColors').value;
+ try{const parsed=parseDeckJSON({title,format,targetCount:target===''?null:Number(target),budgetNT:budget===''?null:Number(budget),commanderColors:colors,fx,deck});meta=parsed.meta;save();render();updateBrand();settingsModal.close();notify('已更新牌組設定：'+meta.title)}catch(e){alert('設定無效：'+e.message)}};
+refreshCategoryDropdown();render();updateBrand();renderLibrarySwitch();
+(async()=>{
+ setStorageStatus('busy','讀取牌組庫…','正在讀取此瀏覽器的牌組庫');
+ await store.init();
+ if(store.kind==='none'){setStorageStatus('bad','⚠ 無法儲存','此瀏覽器不允許儲存資料（可能是無痕模式）');notify('⚠ 這個瀏覽器不允許儲存資料（可能是無痕模式），關閉後牌組會消失。請改用一般視窗的 Chrome／Edge，或隨時下載 JSON 備份。',true);return}
+ let migrated=0,embeddedId=null;
+ try{await reloadLibrary();migrated=await migrateOldData();embeddedId=await importEmbeddedSnapshot()}catch(e){console.warn('牌組庫初始化',e)}
+ const active=await store.kvGet('activeId').catch(()=>null);
+ const target=embeddedId||(active&&library.has(active)?active:byRecent()[0]?.documentId);
+ if(target)openDeck(target,{quiet:true});else{showEmpty()}
+ setStorageStatus('good','✓ 牌組庫 '+library.size+' 副','所有牌組存在此瀏覽器（'+store.kind+'），與 HTML 檔名無關。');
+ if(migrated)notify('已把舊版保存在這個瀏覽器的 '+migrated+' 副牌組搬進牌組庫，可從右上角切換。');
+ else if(embeddedId)notify('已把這份 HTML 內建的牌組「'+meta.title+'」加入牌組庫。');
+ else if(target)notify('已開啟「'+meta.title+'」。牌組庫共 '+library.size+' 副，可從右上角切換。');
+ else notify('牌組庫是空的。請按「匯入 JSON」新增第一副牌組，也可以從「工具」下載範本或載入示範牌組。卡圖及價格需要網路連線。');
+})();
+})();
+</script></body></html>
