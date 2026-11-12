@@ -113,15 +113,17 @@ dialog.zoommodal::backdrop{background:#000d}
 /* 閃卡／刻蝕閃視覺效果（Scryfall 只提供一般版掃描圖，這層光澤是畫面效果） */
 .foilwrap{position:relative;display:block;overflow:hidden;border-radius:8px;line-height:0}
 .zoomfoil{display:inline-block;border-radius:4.2%/3%}
-.foilfx::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:color-dodge;opacity:.5;
- background:linear-gradient(115deg,transparent 18%,rgba(255,60,150,.55) 28%,rgba(255,210,60,.55) 36%,rgba(60,255,170,.55) 44%,rgba(60,180,255,.55) 52%,rgba(180,80,255,.55) 60%,transparent 70%);
- background-size:260% 260%;animation:foilshine 5.5s linear infinite}
-.foilfx::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:soft-light;opacity:.55;
- background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.9) 48%,transparent 56%);background-size:300% 300%;animation:foilshine 3.8s ease-in-out infinite}
-.etchedfx::after{mix-blend-mode:overlay;opacity:.55;
- background:linear-gradient(120deg,transparent 15%,rgba(255,240,200,.6) 30%,rgba(200,210,230,.5) 42%,rgba(255,225,160,.6) 55%,transparent 72%);background-size:260% 260%}
-@keyframes foilshine{0%{background-position:100% 100%}100%{background-position:0% 0%}}
-@media (prefers-reduced-motion:reduce){.foilfx::after,.foilfx::before{animation:none;background-position:50% 50%}}
+.foilfx::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:color-dodge;opacity:.32;
+ background:linear-gradient(115deg,rgb(255,60,150),rgb(255,210,60),rgb(60,255,170),rgb(60,180,255),rgb(180,80,255),rgb(255,60,150));
+ animation:foilhue 9s linear infinite;will-change:filter}
+.foilfx::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:soft-light;opacity:.7;
+ background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.95) 50%,transparent 58%);background-size:300% 300%;background-position:100% 100%;
+ animation:foilglare 5s ease-in-out infinite}
+.etchedfx::after{mix-blend-mode:overlay;opacity:.45;animation:none;
+ background:linear-gradient(120deg,rgba(255,240,200,.2),rgba(255,235,190,.9) 35%,rgba(200,210,230,.7) 55%,rgba(255,225,160,.9) 75%,rgba(255,240,200,.2))}
+@keyframes foilhue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}
+@keyframes foilglare{0%{background-position:100% 100%}65%,100%{background-position:0% 0%}}
+@media (prefers-reduced-motion:reduce){.foilfx::after,.foilfx::before{animation:none}}
 @media(max-width:590px){.zoombody{padding:44px 4px 8px}.zoomimgs{flex-direction:column}.zoomimgs img,.zoomimgs.two img{max-width:92vw;max-height:72vh}.zoomimgs.two img{max-height:38vh}.zoomph{height:72vh;max-width:92vw}.zoomimgs.two .zoomph{height:38vh;max-width:92vw}.zoomnav{top:auto;bottom:-2px}.zoomnav.prev{left:8px}.zoomnav.next{right:8px}.zoomclose{top:0}}
 </style></head><body>
 <header><div class="brandline"><div><span class="brandtag">MTG DECK STUDIO</span><h1 id="deckTitle">尚未載入牌組</h1></div><div class="libbar"><span id="deckFormatBadge" class="pill">匯入 JSON 開始</span><select id="deckSwitch" aria-label="切換牌組" title="切換牌組"></select><button id="openLibrary" type="button" title="切換、新增、複製、刪除、備份牌組">📚 牌組庫</button></div></div></header>
