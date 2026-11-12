@@ -140,7 +140,7 @@ dialog.zoommodal::backdrop{background:#000d}
         <button id="reloadPrices" title="再次從 Scryfall 更新目前印刷版本的參考價格">↻ 更新卡價／圖片</button>
         <button id="openLibraryTool">📚 牌組庫（切換／新增／刪除）</button><button id="resetDeck">＋ 新增空白牌組</button>
         <button id="importBtn">匯入 JSON（新增牌組）</button><button id="addCard">＋ 新增牌張</button><button id="deckSettings">牌組設定</button>
-        <button id="exportJson">下載此牌組 JSON</button><button id="exportAll" class="btnprimary">⬇ 匯出全部備份</button><button id="exportTxt">匯出 Moxfield TXT</button>
+        <button id="exportJson">檢視／匯出 JSON</button><button id="exportAll" class="btnprimary">⬇ 匯出全部備份</button><button id="exportTxt">檢視／匯出 Moxfield</button>
         <button id="templateBtn">下載 JSON 範本</button><button id="exampleBtn">載入示範牌組</button>
         <input class="fileinput" id="importFile" type="file" accept=".json,application/json">
         <p class="toolnote">所有牌組都存在這個瀏覽器的牌組庫，跟 HTML 檔名無關，改名、搬位置都讀得到。換電腦、換瀏覽器或清除瀏覽資料前，請先「匯出全部備份」。</p>
@@ -180,6 +180,12 @@ dialog.zoommodal::backdrop{background:#000d}
 <label>Commander 色組（用逗號分隔，可空白）<input id="settingColors" class="inputwide" placeholder="例如 B, R, G"></label></div>
 <p class="guide">Commander 預設目標 100 張；構築格式預設至少 60 張。這裡只提示張數，不會攔阻自訂牌組。色組留空時不套用換牌的色組檢查；此工具不取代官方賽制合法性查詢。</p>
 <div class="row"><button id="saveSettings" class="btnprimary">儲存設定</button></div>
+</div></dialog>
+<dialog id="textModal" style="width:min(820px,96vw)"><div class="dialogbody"><div class="modalheader"><h2 id="textTitle">牌組內容</h2><button id="closeText">✕ 關閉</button></div>
+<div class="segmented" style="margin-top:10px"><button id="tabJson" type="button">JSON</button><button id="tabTxt" type="button">Moxfield 文字</button></div>
+<p id="textInfo" class="small muted" style="margin:4px 0 8px"></p>
+<textarea id="textOut" readonly spellcheck="false" style="width:100%;height:min(58vh,520px);box-sizing:border-box;resize:vertical;font:12px/1.5 ui-monospace,Consolas,'Courier New',monospace;background:#0f1a16;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;white-space:pre;overflow:auto"></textarea>
+<div class="row" style="margin-top:10px"><button id="textCopy" class="btnprimary" type="button">📋 複製全部</button><button id="textDownload" type="button">⬇ 下載檔案</button><span id="textMsg" class="small muted"></span></div>
 </div></dialog>
 <dialog id="libraryModal" style="width:min(720px,96vw)"><div class="dialogbody"><div class="modalheader"><h2>📚 牌組庫</h2><button id="closeLibrary">✕ 關閉</button></div>
 <div class="row" style="margin-top:10px"><button id="libNew" class="btnprimary">＋ 新增空白牌組</button><button id="libImport">匯入 JSON／備份</button><button id="libExportAll">⬇ 匯出全部備份</button></div>
@@ -698,7 +704,20 @@ el('templateBtn').onclick=downloadTemplate;el('startTemplate').onclick=downloadT
 
 function loadExample(){const data={title:'Indoraptor V6.2｜示範牌組',format:'Commander',targetCount:100,budgetNT:5000,commanderColors:['B','R','G'],fx:32.5,deck:sampleDeck};commitImport(parseDeckJSON(data))}
 el('exampleBtn').onclick=loadExample;el('startExample').onclick=loadExample;
-el('reloadPrices').onclick=()=>refreshPrices();el('exportJson').onclick=()=>{if(!documentId){notify('目前沒有開啟的牌組。',true);return}exportJson()};el('exportAll').onclick=exportAll;el('exportTxt').onclick=exportTxt;
+el('reloadPrices').onclick=()=>refreshPrices();el('exportAll').onclick=exportAll;
+// 直接在頁面上檢視 JSON／Moxfield 文字，可複製或下載
+const textModal=el('textModal');let textMode='json';
+function moxText(){return deck.map(c=>c.qty+' '+c.name).join('\n')+'\n'}
+function showText(mode){textMode=mode;const isJson=mode==='json';const t=isJson?JSON.stringify(payload(),null,2):moxText();
+ el('textOut').value=t;el('textOut').scrollTop=0;el('tabJson').classList.toggle('active',isJson);el('tabTxt').classList.toggle('active',!isJson);
+ el('textTitle').textContent=(meta.title||'牌組')+(isJson?'｜JSON':'｜Moxfield 文字');
+ el('textInfo').textContent=isJson?'完整牌組資料（含版本、閃卡、持有狀態、台灣店價），可貼到其他地方保存，或用「匯入 JSON」還原。':'可直接貼到 Moxfield 的 Import 匯入。共 '+deck.length+' 種牌、'+deck.reduce((a,c)=>a+c.qty,0)+' 張。';
+ el('textMsg').textContent=''}
+function openText(mode){if(!documentId||!deck.length){notify('目前沒有開啟的牌組。',true);return}el('toolsDetails').open=false;showText(mode);textModal.showModal()}
+el('exportJson').onclick=()=>openText('json');el('exportTxt').onclick=()=>openText('txt');
+el('tabJson').onclick=()=>showText('json');el('tabTxt').onclick=()=>showText('txt');el('closeText').onclick=()=>textModal.close();
+el('textDownload').onclick=()=>{if(textMode==='json')exportJson();else exportTxt()};
+el('textCopy').onclick=async()=>{const ta=el('textOut');try{await navigator.clipboard.writeText(ta.value)}catch(e){ta.focus();ta.select();try{document.execCommand('copy')}catch(_){}}el('textMsg').textContent='✓ 已複製到剪貼簿'};
 const libraryModal=el('libraryModal');
 function openLibrary(){el('toolsDetails').open=false;renderLibraryList();libraryModal.showModal()}
 el('openLibrary').onclick=openLibrary;el('openLibraryTool').onclick=openLibrary;el('closeLibrary').onclick=()=>libraryModal.close();
